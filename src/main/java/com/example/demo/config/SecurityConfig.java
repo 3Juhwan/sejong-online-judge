@@ -58,9 +58,9 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/hello").permitAll()
-                .antMatchers("/api/authenticate").permitAll()
-                .antMatchers("/api/signup").permitAll()
+                .antMatchers("/api/v1/hello").permitAll()
+                .antMatchers("/api/v1/authenticate").permitAll()
+                .antMatchers("/api/v1/signup").permitAll()
 
                 .anyRequest().authenticated()
 
