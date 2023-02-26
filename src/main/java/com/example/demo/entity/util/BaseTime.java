@@ -20,5 +20,5 @@ public abstract class BaseTime {
     private LocalDateTime registeredTime;
 
     @LastModifiedDate
-    private LocalDateTime modifiedDate;
+    private LocalDateTime modifiedTime;
 }
