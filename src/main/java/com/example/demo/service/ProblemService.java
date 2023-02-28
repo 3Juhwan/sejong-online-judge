@@ -13,14 +13,19 @@ public class ProblemService {
     private final ProblemRepository problemRepository;
 
     public ProblemDto saveProblem(ProblemDto problemDto) {
-
-        Problem problem = Problem.builder()
-                .title(problemDto.getTitle())
-                .content(problemDto.getContent())
-                .timeLimit(problemDto.getTimeLimit())
-                .memoryLimit(problemDto.getMemoryLimit())
-                .build();
-
+        Problem problem = ProblemDto.toEntity(problemDto);
         return ProblemDto.from(problemRepository.save(problem));
     }
+
+    public ProblemDto updateProblem(ProblemDto problemDto) {
+        Problem amendedProblem = problemRepository
+                                    .findById(problemDto.getId()).get()
+                                    .updateEntity(problemDto);
+        return ProblemDto.from(problemRepository.save(amendedProblem));
+    }
+
+    public void deleteProblem(Long problemId) {
+        problemRepository.deleteById(problemId);
+    }
+
 }
