@@ -61,13 +61,12 @@ public class SecurityConfig {
                 .antMatchers("/api/v1/hello").permitAll()
                 .antMatchers("/api/v1/authenticate").permitAll()
                 .antMatchers("/api/v1/signup").permitAll()
-//                .antMatchers("/api/v1/submission").permitAll()
-                .antMatchers("/api/v1/new-problem").permitAll()
 
                 .anyRequest().authenticated()
 
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider));
+
         return http.build();
     }
 }
