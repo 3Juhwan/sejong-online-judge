@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.dto.ProblemDto;
 import com.example.demo.entity.util.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,4 +36,12 @@ public class Problem extends BaseTime {
 
     @OneToMany(mappedBy = "problem")
     private List<TestData> testDataList;
+
+    public Problem updateEntity(ProblemDto problemDto) {
+        this.title = problemDto.getTitle();
+        this.content = problemDto.getContent();
+        this.timeLimit = problemDto.getTimeLimit();
+        this.memoryLimit = problemDto.getMemoryLimit();
+        return this;
+    }
 }
