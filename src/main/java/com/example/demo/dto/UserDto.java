@@ -13,6 +13,8 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
 
     @NotNull
@@ -42,4 +44,5 @@ public class UserDto {
                 .email(user.getEmail())
                 .build();
     }
+
 }

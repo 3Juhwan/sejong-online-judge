@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import com.example.demo.entity.util.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+@Getter
 @Entity
 @Builder
 @AllArgsConstructor
@@ -32,5 +34,5 @@ public class Problem extends BaseTime {
     private Long memoryLimit;
 
     @OneToMany(mappedBy = "problem")
-    private List<testData> testDataList;
+    private List<TestData> testDataList;
 }

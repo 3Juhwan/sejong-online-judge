@@ -23,11 +23,10 @@ public class UserService {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
 
-
         User user = User.builder()
                 .username(userDto.getUsername())
                 .password(passwordEncoder.encode(userDto.getPassword()))
-                .nickname(userDto.getNickname())
+                .email(userDto.getEmail())
                 .authority("ROLE_USER")
                 .activated(true)
                 .build();

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class testData extends BaseTime {
+public class TestData extends BaseTime {
 
     @Id
     @Column(name = "test_data_id")
