@@ -18,10 +18,10 @@ public class ProblemService {
     }
 
     public ProblemDto updateProblem(ProblemDto problemDto) {
-        Problem amendedProblem = problemRepository
+        Problem updatedProblem = problemRepository
                                     .findById(problemDto.getId()).get()
                                     .updateEntity(problemDto);
-        return ProblemDto.from(problemRepository.save(amendedProblem));
+        return ProblemDto.from(problemRepository.save(updatedProblem));
     }
 
     public void deleteProblem(Long problemId) {
