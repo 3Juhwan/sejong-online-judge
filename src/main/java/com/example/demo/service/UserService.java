@@ -11,8 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -27,19 +28,17 @@ public class UserService {
                 .username(userDto.getUsername())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .email(userDto.getEmail())
-                .authority("ROLE_USER")
+                .authority("ROLE_STUDENT")
                 .activated(true)
                 .build();
 
         return UserDto.from(userRepository.save(user));
     }
 
-    @Transactional(readOnly = true)
     public UserDto getUserWithAuthority(String username) {
         return UserDto.from(userRepository.findOneWithAuthorityByUsername(username).orElse(null));
     }
 
-    @Transactional(readOnly = true)
     public UserDto getMyUserWithAuthority() {
         return UserDto.from(SecurityUtil.getCurrentUsername().flatMap(userRepository::findOneWithAuthorityByUsername).orElse(null));
     }
