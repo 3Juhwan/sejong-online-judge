@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import com.example.demo.dto.ProblemDto;
+import com.example.demo.dto.problem.ProblemDto;
 import com.example.demo.entity.util.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,6 +33,10 @@ public class Problem extends BaseTime {
     private Long timeLimit;
 
     private Long memoryLimit;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "contest_id")
+    private Contest contest;
 
     @OneToMany(mappedBy = "problem")
     private List<TestData> testDataList;
