@@ -1,12 +1,15 @@
 package com.example.demo.entity;
 
+import com.example.demo.dto.testdata.TestDataDto;
 import com.example.demo.entity.util.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Getter
 @Entity
 @Builder
 @AllArgsConstructor
@@ -25,4 +28,11 @@ public class TestData extends BaseTime {
     private String input;
 
     private String output;
+
+    public TestData updateEntity(TestDataDto testDataDto) {
+        this.input = testDataDto.getInput();
+        this.output = testDataDto.getOutput();
+        return this;
+    }
+
 }
