@@ -1,13 +1,19 @@
 package com.example.demo.entity;
 
 import com.example.demo.entity.util.BaseTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Getter
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Course extends BaseTime {
 
     @Id @Column(name = "course_id")
