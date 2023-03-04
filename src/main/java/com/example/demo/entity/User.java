@@ -8,6 +8,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Table(name = "user")
 @Entity
@@ -41,5 +42,8 @@ public class User extends BaseTime {
 
     @NotNull
     private boolean activated;
+
+    @OneToMany(mappedBy = "user")
+    private List<CourseUser> courseUser;
 
 }
