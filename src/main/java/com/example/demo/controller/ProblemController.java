@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.ProblemDto;
+import com.example.demo.dto.problem.ProblemDto;
 import com.example.demo.service.ProblemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

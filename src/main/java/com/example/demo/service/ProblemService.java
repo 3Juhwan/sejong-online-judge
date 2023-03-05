@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.ProblemDto;
+import com.example.demo.dto.problem.ProblemDto;
 import com.example.demo.entity.Problem;
 import com.example.demo.repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;

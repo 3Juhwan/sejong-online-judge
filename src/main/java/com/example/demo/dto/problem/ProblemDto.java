@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.dto.problem;
 
 import com.example.demo.entity.Problem;
 import lombok.AllArgsConstructor;

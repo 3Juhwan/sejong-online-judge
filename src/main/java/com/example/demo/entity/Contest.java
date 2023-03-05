@@ -21,6 +21,6 @@ public class Contest extends BaseTime {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @OneToMany(mappedBy = "problem")
+    @OneToMany(mappedBy = "contest")
     private List<Problem> contestProblems;
 }

@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
 
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.user.UserDto;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.util.SecurityUtil;

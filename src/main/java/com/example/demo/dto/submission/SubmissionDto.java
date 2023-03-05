@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.dto.submission;
 
 import com.example.demo.entity.enums.Status;
 import com.example.demo.entity.submission.Submission;
