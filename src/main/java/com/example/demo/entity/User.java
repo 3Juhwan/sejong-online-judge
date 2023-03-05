@@ -46,4 +46,7 @@ public class User extends BaseTime {
     @OneToMany(mappedBy = "user")
     private List<CourseUser> courseUser;
 
+    @OneToMany(mappedBy = "creator")
+    private List<Course> createdCourses;
+
 }
