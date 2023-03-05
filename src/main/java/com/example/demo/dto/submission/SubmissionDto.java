@@ -1,7 +1,7 @@
 package com.example.demo.dto.submission;
 
 import com.example.demo.entity.enums.Status;
-import com.example.demo.entity.submission.Submission;
+import com.example.demo.entity.Submission;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

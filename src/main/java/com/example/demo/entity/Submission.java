@@ -1,7 +1,5 @@
-package com.example.demo.entity.submission;
+package com.example.demo.entity;
 
-import com.example.demo.entity.Problem;
-import com.example.demo.entity.User;
 import com.example.demo.entity.enums.Language;
 import com.example.demo.entity.enums.Status;
 import lombok.AllArgsConstructor;

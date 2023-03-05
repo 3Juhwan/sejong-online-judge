@@ -4,7 +4,7 @@ import com.example.demo.dto.submission.SubmissionDto;
 import com.example.demo.entity.Problem;
 import com.example.demo.entity.User;
 import com.example.demo.entity.enums.Language;
-import com.example.demo.entity.submission.Submission;
+import com.example.demo.entity.Submission;
 import com.example.demo.repository.ProblemRepository;
 import com.example.demo.repository.SubmissionRepository;
 import com.example.demo.repository.UserRepository;
