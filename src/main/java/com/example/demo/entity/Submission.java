@@ -38,6 +38,10 @@ public class Submission {
     @JoinColumn(name = "problem_id", updatable = false)
     private Problem problem;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "submitStatus_id")
+    private SubmitStatus submitStatus;
+
     @NotNull
     private String code;
 

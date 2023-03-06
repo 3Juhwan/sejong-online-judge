@@ -41,6 +41,9 @@ public class Problem extends BaseTime {
     @OneToMany(mappedBy = "problem")
     private List<TestData> testDataList;
 
+    @OneToOne(mappedBy = "problem")
+    private SubmitStatus submitStatus;
+
     public Problem updateEntity(ProblemDto problemDto) {
         this.title = problemDto.getTitle();
         this.content = problemDto.getContent();

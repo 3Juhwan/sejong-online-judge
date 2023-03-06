@@ -28,5 +28,5 @@ public class Contest extends BaseTime {
     private Course course;
 
     @OneToMany(mappedBy = "contest")
-    private List<Problem> contestProblems;
+    private List<SubmitStatus> submitStatusList;
 }
