@@ -1,12 +1,18 @@
 package com.example.demo.entity;
 
 import com.example.demo.entity.util.BaseTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Contest extends BaseTime {
 
