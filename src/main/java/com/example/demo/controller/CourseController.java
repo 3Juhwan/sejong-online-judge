@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.CourseUserDto;
+import com.example.demo.dto.course.AddCourseDto;
 import com.example.demo.dto.course.AddUserToCourseDto;
-import com.example.demo.dto.course.CourseDto;
 import com.example.demo.dto.course.FindUserCourseDto;
 import com.example.demo.service.CourseService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class CourseController {
 
     @PostMapping("/new-course")
     @PreAuthorize(allAuth)
-    public ResponseEntity<CourseDto> addCourse(@Valid @RequestBody CourseDto courseDto) {
+    public ResponseEntity<AddCourseDto> addCourse(@Valid @RequestBody AddCourseDto courseDto) {
         return ResponseEntity.ok(courseService.saveCourse(courseDto));
     }
 

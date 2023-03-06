@@ -1,8 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.CourseUserDto;
+import com.example.demo.dto.course.AddCourseDto;
 import com.example.demo.dto.course.AddUserToCourseDto;
-import com.example.demo.dto.course.CourseDto;
 import com.example.demo.dto.course.FindUserCourseDto;
 import com.example.demo.entity.Course;
 import com.example.demo.entity.CourseUser;
@@ -26,10 +26,10 @@ public class CourseService {
     private final CourseUserRepository courseUserRepository;
 
 
-    public CourseDto saveCourse(CourseDto courseDto) {
+    public AddCourseDto saveCourse(AddCourseDto courseDto) {
         User creator = userRepository.findByUsername(courseDto.getCreator()).get();
-        Course course = CourseDto.toEntity(courseDto, creator);
-        return CourseDto.from(courseRepository.save(course), courseDto.getCreator());
+        Course course = AddCourseDto.toEntity(courseDto, creator);
+        return AddCourseDto.from(courseRepository.save(course));
     }
 
     public CourseUserDto registerUserToCourse(AddUserToCourseDto courseDto) {
