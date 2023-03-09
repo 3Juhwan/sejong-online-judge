@@ -30,7 +30,7 @@ public class ProblemService {
         problemRepository.deleteById(problemId);
     }
 
-    public GetProblemDto getProblem(Long problemId) {
+    public GetProblemDto getOneProblem(Long problemId) {
         return GetProblemDto.from(problemRepository.findById(problemId).get());
     }
 

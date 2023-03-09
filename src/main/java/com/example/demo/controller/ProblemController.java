@@ -44,7 +44,7 @@ public class ProblemController {
 
     @GetMapping(value = "/problem", params = "problemId")
     @PreAuthorize(allAuth)
-    public ResponseEntity<GetProblemDto> getProblem(@Valid @RequestParam Long problemId) {
-        return ResponseEntity.ok(problemService.getProblem(problemId));
+    public ResponseEntity<GetProblemDto> getOneProblem(@Valid @RequestParam Long problemId) {
+        return ResponseEntity.ok(problemService.getOneProblem(problemId));
     }
 }
