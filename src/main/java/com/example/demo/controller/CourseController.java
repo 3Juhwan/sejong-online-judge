@@ -1,9 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.CourseUserDto;
-import com.example.demo.dto.course.AddCourseDto;
-import com.example.demo.dto.course.AddUserToCourseDto;
-import com.example.demo.dto.course.FindUserCourseDto;
+import com.example.demo.dto.course.SaveUserToCourseDto;
+import com.example.demo.dto.course.CreateCourseDto;
+import com.example.demo.dto.course.FindCourseDto;
 import com.example.demo.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,21 +23,23 @@ public class CourseController {
 
     private final CourseService courseService;
 
-    @PostMapping("/new-course")
+    @PostMapping("/course/new")
     @PreAuthorize(allAuth)
-    public ResponseEntity<AddCourseDto> addCourse(@Valid @RequestBody AddCourseDto courseDto) {
-        return ResponseEntity.ok(courseService.saveCourse(courseDto));
+    public ResponseEntity<Object> createCourse(@Valid @RequestBody CreateCourseDto courseDto) {
+        courseService.saveCourse(courseDto);
+        return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/course/register-user")
+    @PostMapping("/course/register")
     @PreAuthorize(professorAuth)
-    public ResponseEntity<CourseUserDto> addUserToCourse(@Valid @RequestBody AddUserToCourseDto courseDto) {
-        return ResponseEntity.ok(courseService.registerUserToCourse(courseDto));
+    public ResponseEntity<Object> saveUserToCourse(@Valid @RequestBody SaveUserToCourseDto courseDto) {
+        courseService.saveUserToCourse(courseDto);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/mainpage")
+    @GetMapping("/courses")
     @PreAuthorize(allAuth)
-    public ResponseEntity<List<FindUserCourseDto>> getUserCourse(Principal principal) {
-        return ResponseEntity.ok(courseService.findUserCourse(principal));
+    public ResponseEntity<List<FindCourseDto>> getCourses(Principal principal) {
+        return ResponseEntity.ok(courseService.getCourses(principal));
     }
 }

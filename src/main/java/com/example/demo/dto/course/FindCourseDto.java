@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FindUserCourseDto {
+public class FindCourseDto {
 
     private String title;
 
-    public static FindUserCourseDto from(Course course) {
-        return FindUserCourseDto.builder()
+    public static FindCourseDto from(Course course) {
+        return FindCourseDto.builder()
                 .title(course.getTitle())
                 .build();
     }

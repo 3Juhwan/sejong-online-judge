@@ -1,9 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.CourseUserDto;
-import com.example.demo.dto.course.AddCourseDto;
-import com.example.demo.dto.course.AddUserToCourseDto;
-import com.example.demo.dto.course.FindUserCourseDto;
+import com.example.demo.dto.course.CreateCourseDto;
+import com.example.demo.dto.course.FindCourseDto;
+import com.example.demo.dto.course.SaveUserToCourseDto;
 import com.example.demo.entity.Course;
 import com.example.demo.entity.CourseUser;
 import com.example.demo.entity.User;
@@ -26,13 +25,13 @@ public class CourseService {
     private final CourseUserRepository courseUserRepository;
 
 
-    public AddCourseDto saveCourse(AddCourseDto courseDto) {
+    public void saveCourse(CreateCourseDto courseDto) {
         User creator = userRepository.findByUsername(courseDto.getCreator()).get();
-        Course course = AddCourseDto.toEntity(courseDto, creator);
-        return AddCourseDto.from(courseRepository.save(course));
+        Course course = CreateCourseDto.toEntity(courseDto, creator);
+        courseRepository.save(course);
     }
 
-    public CourseUserDto registerUserToCourse(AddUserToCourseDto courseDto) {
+    public void saveUserToCourse(SaveUserToCourseDto courseDto) {
         courseDto.splitUsers();
         for (String user : courseDto.getUserList()) {
             User findUser = userRepository.findByUsername(user).get();
@@ -40,15 +39,14 @@ public class CourseService {
             CourseUser courseUser = new CourseUser(findUser, findCourse);
             courseUserRepository.save(courseUser);
         }
-        return CourseUserDto.from(courseDto.getCourseId());
     }
 
-    public List<FindUserCourseDto> findUserCourse(Principal principal) {
+    public List<FindCourseDto> getCourses(Principal principal) {
         String username = principal.getName();
         User user = userRepository.findByUsername(username).get();
         return courseUserRepository.findCourseUsersByUser(user)
                 .stream()
-                .map(c -> FindUserCourseDto.from(c.getCourse()))
+                .map(c -> FindCourseDto.from(c.getCourse()))
                 .collect(Collectors.toList());
     }
 

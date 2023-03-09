@@ -11,13 +11,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddCourseDto {
+public class CreateCourseDto {
 
     private String title;
     private String creator;
     private Long linkedCourseId;
 
-    public static Course toEntity(AddCourseDto courseDto, User creator) {
+
+    public static Course toEntity(CreateCourseDto courseDto, User creator) {
         return Course.builder()
                 .title(courseDto.title)
                 .creator(creator)
@@ -25,8 +26,8 @@ public class AddCourseDto {
                 .build();
     }
 
-    public static AddCourseDto from(Course course) {
-        return AddCourseDto.builder()
+    public static CreateCourseDto from(Course course) {
+        return CreateCourseDto.builder()
                 .title(course.getTitle())
                 .creator(course.getCreator().getUsername())
                 .linkedCourseId(course.getLinkedCourseId())
