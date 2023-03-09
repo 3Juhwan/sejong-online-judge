@@ -12,22 +12,16 @@ import javax.validation.constraints.NotNull;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProblemDto {
-
-    private Long id;
+public class CreateProblemDto {
 
     private String title;
-
     private String content;
-
     private Long timeLimit;
-
     private Long memoryLimit;
 
 
-    public static ProblemDto from(@NotNull Problem problem) {
-        return ProblemDto.builder()
-                .id(problem.getId())
+    public static CreateProblemDto from(@NotNull Problem problem) {
+        return CreateProblemDto.builder()
                 .title(problem.getTitle())
                 .content(problem.getContent())
                 .timeLimit(problem.getTimeLimit())
@@ -35,9 +29,8 @@ public class ProblemDto {
                 .build();
     }
 
-    public static Problem toEntity(@NotNull ProblemDto problemDto) {
+    public static Problem toEntity(@NotNull CreateProblemDto problemDto) {
         return Problem.builder()
-                .id(problemDto.getId())
                 .title(problemDto.getTitle())
                 .content(problemDto.getContent())
                 .timeLimit(problemDto.getTimeLimit())

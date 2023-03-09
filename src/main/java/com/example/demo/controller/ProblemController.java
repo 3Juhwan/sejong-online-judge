@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.problem.ProblemDto;
+import com.example.demo.dto.problem.GetProblemDto;
+import com.example.demo.dto.problem.CreateProblemDto;
+import com.example.demo.dto.problem.UpdateProblemDto;
 import com.example.demo.service.ProblemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -8,9 +10,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
 import java.util.Objects;
 
+import static com.example.demo.util.AuthUtil.allAuth;
 import static com.example.demo.util.AuthUtil.studentExclusiveAuth;
 
 @RestController
@@ -20,23 +22,29 @@ public class ProblemController {
 
     private final ProblemService problemService;
 
-    @PostMapping("/new-problem")
+    @PostMapping("/problem/new")
     @PreAuthorize(studentExclusiveAuth)
-    public ResponseEntity<ProblemDto> addProblem(@Valid @RequestBody ProblemDto problemDto) {
-        return ResponseEntity.ok(problemService.saveProblem(problemDto));
+    public ResponseEntity<Objects> createProblem(@Valid @RequestBody CreateProblemDto problemDto) {
+        problemService.saveProblem(problemDto);
+        return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/problem/{id}/update")
+    @PutMapping("/problem/{id}")
     @PreAuthorize(studentExclusiveAuth)
-    public ResponseEntity<ProblemDto> updateProblem(@Valid @RequestBody ProblemDto problemDto) {
+    public ResponseEntity<CreateProblemDto> updateProblem(@Valid @RequestBody UpdateProblemDto problemDto) {
         return ResponseEntity.ok(problemService.updateProblem(problemDto));
     }
 
-    @GetMapping("/problem/{id}/delete")
+    @DeleteMapping("/problem/{id}")
     @PreAuthorize(studentExclusiveAuth)
     public ResponseEntity<Objects> deleteProblem(@PathVariable("id") Long problemId) {
         problemService.deleteProblem(problemId);
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping(value = "/problem", params = "problemId")
+    @PreAuthorize(allAuth)
+    public ResponseEntity<GetProblemDto> getProblem(@Valid @RequestParam Long problemId) {
+        return ResponseEntity.ok(problemService.getProblem(problemId));
+    }
 }

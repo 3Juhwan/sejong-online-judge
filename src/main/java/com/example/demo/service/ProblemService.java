@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.problem.ProblemDto;
+import com.example.demo.dto.problem.GetProblemDto;
+import com.example.demo.dto.problem.CreateProblemDto;
+import com.example.demo.dto.problem.UpdateProblemDto;
 import com.example.demo.entity.Problem;
 import com.example.demo.repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,20 +14,24 @@ public class ProblemService {
 
     private final ProblemRepository problemRepository;
 
-    public ProblemDto saveProblem(ProblemDto problemDto) {
-        Problem problem = ProblemDto.toEntity(problemDto);
-        return ProblemDto.from(problemRepository.save(problem));
+    public void saveProblem(CreateProblemDto problemDto) {
+        Problem problem = CreateProblemDto.toEntity(problemDto);
+        problemRepository.save(problem);
     }
 
-    public ProblemDto updateProblem(ProblemDto problemDto) {
+    public CreateProblemDto updateProblem(UpdateProblemDto problemDto) {
         Problem updatedProblem = problemRepository
-                                    .findById(problemDto.getId()).get()
-                                    .updateEntity(problemDto);
-        return ProblemDto.from(problemRepository.save(updatedProblem));
+                .findById(problemDto.getProblemId()).get()
+                .updateEntity(problemDto);
+        return CreateProblemDto.from(problemRepository.save(updatedProblem));
     }
 
     public void deleteProblem(Long problemId) {
         problemRepository.deleteById(problemId);
+    }
+
+    public GetProblemDto getProblem(Long problemId) {
+        return GetProblemDto.from(problemRepository.findById(problemId).get());
     }
 
 }
