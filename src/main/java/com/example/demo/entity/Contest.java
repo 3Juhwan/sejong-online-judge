@@ -10,10 +10,10 @@ import javax.persistence.*;
 import java.util.List;
 
 @Getter
+@Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 public class Contest extends BaseTime {
 
     @Id
@@ -23,10 +23,13 @@ public class Contest extends BaseTime {
 
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "course_id")
     private Course course;
 
     @OneToMany(mappedBy = "contest")
-    private List<SubmitStatus> submitStatusList;
+    private List<ContestProblem> registeredProblemList;
+
+//    @OneToMany(mappedBy = "contest")
+//    private List<SubmitStatus> submitStatusList;
 }

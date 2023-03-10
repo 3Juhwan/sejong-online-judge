@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.FindCourseContestDto;
-import com.example.demo.dto.contest.AddContestDto;
+import com.example.demo.dto.GetCourseContestDto;
+import com.example.demo.dto.contest.CreateContestDto;
+import com.example.demo.dto.contestProblem.SaveContestProblemToContestDto;
+import com.example.demo.service.ContestProblemService;
 import com.example.demo.service.ContestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,23 +23,33 @@ import static com.example.demo.util.AuthUtil.studentExclusiveAuth;
 public class ContestController {
 
     private final ContestService contestService;
+    private final ContestProblemService contestProblemService;
 
-    @PostMapping("/new-contest")
+
+    @PostMapping("/contest/new")
     @PreAuthorize(studentExclusiveAuth)
-    public ResponseEntity<List<AddContestDto>> addContest(@Valid @RequestBody List<AddContestDto> contestDto) {
-        return ResponseEntity.ok(contestService.saveContest(contestDto));
+    public ResponseEntity<Object> createContest(@Valid @RequestBody List<CreateContestDto> contestDto) {
+        contestService.saveContests(contestDto);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/contest", params = {"courseId"})
+    @GetMapping(value = "/contests", params = {"courseId"})
     @PreAuthorize(allAuth)
-    public ResponseEntity<List<FindCourseContestDto>> findContestByCourse(@Valid @RequestParam Long courseId) {
-        return ResponseEntity.ok(contestService.findContestByContest(courseId));
+    public ResponseEntity<List<GetCourseContestDto>> getContests(@Valid @RequestParam Long courseId) {
+        return ResponseEntity.ok(contestService.getContests(courseId));
     }
 
-    @GetMapping("/contest/{id}/delete")
+    @DeleteMapping("/contest/{contestId}")
     @PreAuthorize(studentExclusiveAuth)
-    public ResponseEntity<Objects> deleteContest(@PathVariable("id") Long contestId) {
+    public ResponseEntity<Objects> deleteContest(@PathVariable("contestId") Long contestId) {
         contestService.deleteContest(contestId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/contest/problems")
+    @PreAuthorize(studentExclusiveAuth)
+    public ResponseEntity<Objects> saveContestProblemToContest(@Valid @RequestBody SaveContestProblemToContestDto contestProblemToContestDto) {
+        contestProblemService.saveContestProblemToContest(contestProblemToContestDto);
         return ResponseEntity.noContent().build();
     }
 

@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.FindCourseContestDto;
-import com.example.demo.dto.contest.AddContestDto;
+import com.example.demo.dto.GetCourseContestDto;
+import com.example.demo.dto.contest.CreateContestDto;
 import com.example.demo.entity.Contest;
 import com.example.demo.entity.Course;
 import com.example.demo.repository.ContestRepository;
@@ -20,11 +20,11 @@ public class ContestService {
     private final ContestRepository contestRepository;
     private final CourseRepository courseRepository;
 
-    public List<AddContestDto> saveContest(List<AddContestDto> contestDtoList) {
-        List<AddContestDto> result = new ArrayList<>();
-        for (AddContestDto contestDto : contestDtoList) {
-            Contest contest = AddContestDto.toEntity(contestDto, courseRepository.getById(contestDto.getCourseId()));
-            result.add(AddContestDto.from(contestRepository.save(contest)));
+    public List<CreateContestDto> saveContests(List<CreateContestDto> contestDtoList) {
+        List<CreateContestDto> result = new ArrayList<>();
+        for (CreateContestDto contestDto : contestDtoList) {
+            Contest contest = CreateContestDto.toEntity(contestDto, courseRepository.getById(contestDto.getCourseId()));
+            result.add(CreateContestDto.from(contestRepository.save(contest)));
         }
         return result;
     }
@@ -33,10 +33,10 @@ public class ContestService {
         contestRepository.deleteById(contestId);
     }
 
-    public List<FindCourseContestDto> findContestByContest(Long courseId) {
+    public List<GetCourseContestDto> getContests(Long courseId) {
         Course findCourse = courseRepository.findById(courseId).get();
         return contestRepository.findContestByCourse(findCourse).stream()
-                .map(c -> FindCourseContestDto.from(c))
+                .map(c -> GetCourseContestDto.from(c))
                 .collect(Collectors.toList());
     }
 }

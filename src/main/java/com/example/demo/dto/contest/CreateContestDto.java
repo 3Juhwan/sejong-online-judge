@@ -11,20 +11,21 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddContestDto {
+public class CreateContestDto {
 
     private String title;
     private Long courseId;
 
-    public static Contest toEntity(AddContestDto contestDto, Course course) {
+
+    public static Contest toEntity(CreateContestDto contestDto, Course course) {
         return Contest.builder()
                 .title(contestDto.title)
                 .course(course)
                 .build();
     }
 
-    public static AddContestDto from(Contest contest) {
-        return AddContestDto.builder()
+    public static CreateContestDto from(Contest contest) {
+        return CreateContestDto.builder()
                 .title(contest.getTitle())
                 .courseId(contest.getCourse().getId())
                 .build();

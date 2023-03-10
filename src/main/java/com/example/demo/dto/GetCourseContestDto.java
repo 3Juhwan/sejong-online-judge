@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FindCourseContestDto {
+public class GetCourseContestDto {
 
-    private Long id;
+    private Long contestId;
     private String title;
 
-    public static FindCourseContestDto from(Contest contest) {
-        return FindCourseContestDto.builder()
-                .id(contest.getId())
+    public static GetCourseContestDto from(Contest contest) {
+        return GetCourseContestDto.builder()
+                .contestId(contest.getId())
                 .title(contest.getTitle())
                 .build();
     }
