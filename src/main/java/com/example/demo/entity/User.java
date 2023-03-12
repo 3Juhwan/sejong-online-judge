@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.dto.user.UpdateUserDto;
 import com.example.demo.entity.util.BaseTime;
 import lombok.*;
 
@@ -49,4 +50,12 @@ public class User extends BaseTime {
     @OneToMany(mappedBy = "creator")
     private List<Course> createdCourses;
 
+    @OneToMany(mappedBy = "user")
+    private List<Submission> submissionList;
+
+    public User updateEntity(UpdateUserDto userDto) {
+        this.email = userDto.getEmail();
+        System.out.println("userDto.getEmail() = " + userDto.getEmail());
+        return this;
+    }
 }

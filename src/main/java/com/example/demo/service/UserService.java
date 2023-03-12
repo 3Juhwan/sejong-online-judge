@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 
+import com.example.demo.dto.user.UpdateUserDto;
 import com.example.demo.dto.user.UserDto;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
@@ -10,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.security.Principal;
 
 @Service
 @Transactional(readOnly = true)
@@ -41,5 +44,11 @@ public class UserService {
 
     public UserDto getMyUserWithAuthority() {
         return UserDto.from(SecurityUtil.getCurrentUsername().flatMap(userRepository::findOneWithAuthorityByUsername).orElse(null));
+    }
+
+    @Transactional
+    public void updateUser(UpdateUserDto userDto, Principal principal) {
+        User user = userRepository.findOneWithAuthorityByUsername(principal.getName()).orElse(null);
+        userRepository.save(user.updateEntity(userDto));
     }
 }
