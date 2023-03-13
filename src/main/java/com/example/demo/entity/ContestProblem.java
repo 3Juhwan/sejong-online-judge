@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.dto.contestProblem.SaveContestProblemToContestDto;
 import com.example.demo.entity.util.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,8 @@ public class ContestProblem extends BaseTime {
 
     private String title;
 
+    private Long sequence;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "problem_id")
     private Problem problem;
@@ -34,8 +37,10 @@ public class ContestProblem extends BaseTime {
     @OneToMany(mappedBy = "contestProblem")
     private List<SubmitStatus> submitStatuses;
 
-    public static ContestProblem toEntity(Problem problem, Contest contest) {
+    public static ContestProblem toEntity(SaveContestProblemToContestDto.ProblemInfo problemInfo, Problem problem, Contest contest) {
         return ContestProblem.builder()
+                .title(problemInfo.getTitle())
+                .sequence(problemInfo.getSequence())
                 .problem(problem)
                 .contest(contest)
                 .build();

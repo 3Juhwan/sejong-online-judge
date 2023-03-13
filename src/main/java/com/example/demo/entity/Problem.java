@@ -44,6 +44,10 @@ public class Problem extends BaseTime {
     @OneToMany(mappedBy = "problem")
     private List<ContestProblem> registeredProblemList;
 
+    @OneToMany(mappedBy = "problem")
+    private List<Submission> submissionList;
+
+
     public Problem updateEntity(UpdateProblemDto problemDto) {
         this.title = problemDto.getTitle();
         this.content = problemDto.getContent();

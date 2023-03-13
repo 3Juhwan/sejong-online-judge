@@ -12,12 +12,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SaveContestProblemToContestDto {
-
-    private Long contestId;
-    private List<ProblemId> problemList;
+    private List<ProblemInfo> problemList;
 
     @Getter
-    public static class ProblemId {
+    public static class ProblemInfo {
         Long problemId;
+        Long sequence;
+        String title;
     }
 }

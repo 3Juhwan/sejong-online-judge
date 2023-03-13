@@ -46,10 +46,10 @@ public class ContestController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/contest/problems")
+    @PostMapping("/contest/{contestId}/problems")
     @PreAuthorize(studentExclusiveAuth)
-    public ResponseEntity<Objects> saveContestProblemToContest(@Valid @RequestBody SaveContestProblemToContestDto contestProblemToContestDto) {
-        contestProblemService.saveContestProblemToContest(contestProblemToContestDto);
+    public ResponseEntity<Objects> saveContestProblemToContest(@PathVariable("contestId") Long contestId, @Valid @RequestBody SaveContestProblemToContestDto contestProblemToContestDto) {
+        contestProblemService.saveContestProblemToContest(contestId, contestProblemToContestDto);
         return ResponseEntity.noContent().build();
     }
 
