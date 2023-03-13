@@ -21,4 +21,12 @@ public enum Language {
                 .findAny()
                 .orElse(null);
     }
+
+    public static String find(Language language) {
+        return Arrays.stream(values())
+                .filter(l -> l == language)
+                .map(l -> l.value)
+                .findAny()
+                .orElse(null);
+    }
 }

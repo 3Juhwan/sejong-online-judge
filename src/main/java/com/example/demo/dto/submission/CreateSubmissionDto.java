@@ -46,6 +46,7 @@ public class CreateSubmissionDto {
                 .contestProblem(contestProblem)
                 .code(submissionDto.getCode())
                 .language(Language.find(submissionDto.getLanguage()))
+                .length((long)submissionDto.getCode().length())
                 .build();
     }
 }

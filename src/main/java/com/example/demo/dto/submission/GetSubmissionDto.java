@@ -1,14 +1,11 @@
 package com.example.demo.dto.submission;
 
-import com.example.demo.entity.*;
+import com.example.demo.entity.Submission;
 import com.example.demo.entity.enums.Language;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Builder
@@ -17,21 +14,23 @@ import javax.validation.constraints.NotNull;
 public class GetSubmissionDto {
 
     private String username;
-    private Long contestProblem;
-
-    private Problem problem;
-
-    @NotNull
+    private Long contestProblemId;
     private String code;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Language language;
-
+    private String language;
     private Long length;
 
 //    public static Submission toEntity(GetSubmissionDto submissionDto) {
 //
 //    }
+
+    public static GetSubmissionDto from(Submission submission) {
+        return GetSubmissionDto.builder()
+                .username(submission.getUser().getUsername())
+                .contestProblemId(submission.getContestProblem().getId())
+                .code(submission.getCode())
+                .length(submission.getLength())
+                .language(Language.find(submission.getLanguage()))
+                .build();
+    }
 
 }

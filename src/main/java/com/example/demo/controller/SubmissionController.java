@@ -38,20 +38,20 @@ public class SubmissionController {
      * @param principal
      * @return ResponseEntity<SubmissionDto>
      */
-//    @GetMapping(value = "/submission", params = {"username"})
-//    @PreAuthorize(allAuth)
-//    public ResponseEntity<List<CreateSubmissionDto>> getSubmissionByUser(@Valid @RequestParam String username, Principal principal) {
-//        try {
-//            checkValidUsername(principal, username);
-//            return ResponseEntity.ok(submissionService.getSubmissionByUsername(username));
-//        } catch (Exception e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item Not Found");
-//        }
-//    }
+    @GetMapping(value = "/submission", params = {"username"})
+    @PreAuthorize(allAuth)
+    public ResponseEntity<List<CreateSubmissionDto>> getSubmissionByUser(@Valid @RequestParam String username, Principal principal) {
+        try {
+            checkValidUsername(principal, username);
+            return ResponseEntity.ok(submissionService.getSubmissionByUsername(username));
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item Not Found");
+        }
+    }
 
-//    @GetMapping(value = "/submission", params = {"username", "contestProblemId"})
-//    @PreAuthorize(allAuth)
-//    public ResponseEntity<List<GetSubmissionDto>> getSubmissions(@Valid @RequestParam String username, @Valid @RequestParam Long contestProblemId) {
-//        return ResponseEntity.ok(submissionService.getSubmissions(username, contestProblemId));
-//    }
+    @GetMapping(value = "/submission", params = {"username", "contestProblemId"})
+    @PreAuthorize(allAuth)
+    public ResponseEntity<List<GetSubmissionDto>> getSubmissions(@Valid @RequestParam String username, @Valid @RequestParam Long contestProblemId) {
+        return ResponseEntity.ok(submissionService.getSubmissionByUserAndProblem(username, contestProblemId));
+    }
 }
