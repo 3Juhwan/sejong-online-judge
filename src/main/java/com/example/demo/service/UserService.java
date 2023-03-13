@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 
+import com.example.demo.dto.user.CreateUserDto;
 import com.example.demo.dto.user.UpdateUserDto;
 import com.example.demo.dto.user.UserDto;
 import com.example.demo.entity.User;
@@ -22,7 +23,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
-    public UserDto signup(UserDto userDto) {
+    public CreateUserDto signup(CreateUserDto userDto) {
         if (userRepository.findOneWithAuthorityByUsername(userDto.getUsername()).orElse(null) != null) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
@@ -31,11 +32,11 @@ public class UserService {
                 .username(userDto.getUsername())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .email(userDto.getEmail())
-                .authority("ROLE_STUDENT")
+                .authority(userDto.getAuth())
                 .activated(true)
                 .build();
 
-        return UserDto.from(userRepository.save(user));
+        return CreateUserDto.from(userRepository.save(user));
     }
 
     public UserDto getUserWithAuthority(String username) {

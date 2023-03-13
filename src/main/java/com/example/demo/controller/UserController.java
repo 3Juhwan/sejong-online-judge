@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.user.CreateUserDto;
 import com.example.demo.dto.user.UpdateUserDto;
 import com.example.demo.dto.user.UserDto;
 import com.example.demo.service.UserService;
@@ -25,7 +26,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<UserDto> signup(@Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<CreateUserDto> signup(@Valid @RequestBody CreateUserDto userDto) {
         return ResponseEntity.ok(userService.signup(userDto));
     }
 
