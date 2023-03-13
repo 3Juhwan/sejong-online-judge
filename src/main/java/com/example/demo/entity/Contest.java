@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -29,6 +30,10 @@ public class Contest extends BaseTime {
 
     @OneToMany(mappedBy = "contest")
     private List<ContestProblem> registeredProblemList;
+
+    private LocalDateTime startingTime;
+
+    private LocalDateTime endingTime;
 
 //    @OneToMany(mappedBy = "contest")
 //    private List<SubmitStatus> submitStatusList;
