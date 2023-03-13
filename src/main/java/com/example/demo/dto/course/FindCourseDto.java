@@ -13,10 +13,16 @@ import lombok.NoArgsConstructor;
 public class FindCourseDto {
 
     private String title;
+    private Long courseId;
+    private Long score;
+    private Long total;
 
     public static FindCourseDto from(Course course) {
         return FindCourseDto.builder()
                 .title(course.getTitle())
+                .courseId(course.getId())
+                .score(0L)
+                .total(0L)
                 .build();
     }
 }
