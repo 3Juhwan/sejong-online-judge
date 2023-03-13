@@ -1,6 +1,7 @@
 package com.example.demo.dto.submission;
 
 import com.example.demo.entity.ContestProblem;
+import com.example.demo.entity.Problem;
 import com.example.demo.entity.Submission;
 import com.example.demo.entity.User;
 import com.example.demo.entity.enums.Language;
@@ -17,16 +18,11 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class CreateSubmissionDto {
 
-
-    // Submit Info
     private String username;
-
     @NotNull
     private Long contestProblemId;
-
     @NotNull
     private String code;
-
     @NotNull
     private String language;
 
@@ -43,9 +39,10 @@ public class CreateSubmissionDto {
                 .build();
     }
 
-    public static Submission toEntity(CreateSubmissionDto submissionDto, User user, ContestProblem contestProblem) {
+    public static Submission toEntity(CreateSubmissionDto submissionDto, User user, ContestProblem contestProblem, Problem problem) {
         return Submission.builder()
                 .user(user)
+                .problem(problem)
                 .contestProblem(contestProblem)
                 .code(submissionDto.getCode())
                 .language(Language.find(submissionDto.getLanguage()))

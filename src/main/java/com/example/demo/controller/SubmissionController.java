@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.submission.SubmissionDto;
+import com.example.demo.dto.submission.CreateSubmissionDto;
+import com.example.demo.dto.submission.GetSubmissionDto;
 import com.example.demo.service.SubmissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-
 import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.demo.util.AuthUtil.allAuth;
 import static com.example.demo.validation.AuthValidation.checkValidUsername;
@@ -24,10 +25,11 @@ public class SubmissionController {
 
     private final SubmissionService submissionService;
 
-    @PostMapping("/submit")
+    @PostMapping("/submission/new")
     @PreAuthorize(allAuth)
-    public ResponseEntity<SubmissionDto> addSubmission(@Valid @RequestBody SubmissionDto submissionDto) {
-        return ResponseEntity.ok(submissionService.saveSubmission(submissionDto));
+    public ResponseEntity<Objects> createSubmission(@Valid @RequestBody CreateSubmissionDto submissionDto) {
+        submissionService.saveSubmission(submissionDto);
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -36,20 +38,20 @@ public class SubmissionController {
      * @param principal
      * @return ResponseEntity<SubmissionDto>
      */
-    @GetMapping(value = "/submission", params = {"username"})
-    @PreAuthorize(allAuth)
-    public ResponseEntity<List<SubmissionDto>> getSubmissionByUser(@Valid @RequestParam String username, Principal principal) {
-        try {
-            checkValidUsername(principal, username);
-            return ResponseEntity.ok(submissionService.getSubmissionByUsername(username));
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item Not Found");
-        }
-    }
-
-//    @PreAuthorize("hasAnyRole('USER','ADMIN')")
 //    @GetMapping(value = "/submission", params = {"username"})
-//    public ResponseEntity<SubmissionDto> getSubmissionByUserAndProblem(@Valid @RequestParam SubmissionDto submissionDto) {
-//        return ResponseEntity.ok(submissionService.saveSubmission(submissionDto));
+//    @PreAuthorize(allAuth)
+//    public ResponseEntity<List<CreateSubmissionDto>> getSubmissionByUser(@Valid @RequestParam String username, Principal principal) {
+//        try {
+//            checkValidUsername(principal, username);
+//            return ResponseEntity.ok(submissionService.getSubmissionByUsername(username));
+//        } catch (Exception e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item Not Found");
+//        }
+//    }
+
+//    @GetMapping(value = "/submission", params = {"username", "contestProblemId"})
+//    @PreAuthorize(allAuth)
+//    public ResponseEntity<List<GetSubmissionDto>> getSubmissions(@Valid @RequestParam String username, @Valid @RequestParam Long contestProblemId) {
+//        return ResponseEntity.ok(submissionService.getSubmissions(username, contestProblemId));
 //    }
 }
