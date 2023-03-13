@@ -19,7 +19,7 @@ public class UserDto {
 
     @NotNull
     @Column(unique = true, updatable = false)
-    @Pattern(regexp = "^[a-z0-9]{5,10}$",
+    @Pattern(regexp = "^[a-zA-Z0-9]{5,10}$",
             message = "닉네임은 특수문자를 제외한 5~10자리여야 합니다.")
     @Size(min = 5, max = 10)
     private String username;
