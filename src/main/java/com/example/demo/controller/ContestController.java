@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.GetCourseContestDto;
 import com.example.demo.dto.contest.CreateContestDto;
+import com.example.demo.dto.contest.GetContestByCourseDto;
 import com.example.demo.dto.contestProblem.SaveContestProblemToContestDto;
 import com.example.demo.service.ContestProblemService;
 import com.example.demo.service.ContestService;
@@ -35,7 +35,7 @@ public class ContestController {
 
     @GetMapping(value = "/contests", params = {"courseId"})
     @PreAuthorize(allAuth)
-    public ResponseEntity<List<GetCourseContestDto>> getContests(@Valid @RequestParam Long courseId) {
+    public ResponseEntity<List<GetContestByCourseDto>> getContests(@Valid @RequestParam Long courseId) {
         return ResponseEntity.ok(contestService.getContests(courseId));
     }
 
