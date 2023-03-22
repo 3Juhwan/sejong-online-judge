@@ -27,6 +27,7 @@ public class SubmitStatus extends BaseTime {
     private Long highScore;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
@@ -36,18 +37,17 @@ public class SubmitStatus extends BaseTime {
     @OneToMany(mappedBy = "submitStatus")
     private List<Submission> submissionList;
 
-
-    public SubmitStatus updateEntity(UpdateSubmitStatusDto submitStatusDto) {
-        this.submitCnt++;
-        this.highScore = Math.max(this.highScore, submitStatusDto.getScore());
-        return this;
-    }
-
     public static SubmitStatus getInitEntity(User user) {
         return SubmitStatus.builder()
                 .user(user)
                 .highScore(0L)
                 .submitCnt(0L)
                 .build();
+    }
+
+    public SubmitStatus updateEntity(UpdateSubmitStatusDto submitStatusDto) {
+        this.submitCnt++;
+        this.highScore = Math.max(this.highScore, submitStatusDto.getScore());
+        return this;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.contestProblem.GetContestProblemDto;
+import com.example.demo.dto.contestProblem.GetContestProblemByContestDto;
 import com.example.demo.service.ContestProblemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +31,8 @@ public class ContestProblemController {
      */
     @GetMapping(value = "/contest/{contestId}/problems")
     @PreAuthorize(allAuth)
-    public ResponseEntity<List<GetContestProblemDto>> getContestProblems(@PathVariable("contestId") Long contestId, Principal principal) {
-        List<GetContestProblemDto> contestProblems = contestProblemService.getContestProblems(contestId, principal);
-        return ResponseEntity.ok(contestProblems);
+    public ResponseEntity<List<GetContestProblemByContestDto>> getContestProblems(@PathVariable("contestId") Long contestId, Principal principal) {
+        return ResponseEntity.ok(contestProblemService.getContestProblems(contestId, principal));
     }
 
 }

@@ -40,6 +40,7 @@ public class CreateUserDto {
     @Size(max = 30)
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String auth;
 
     public static CreateUserDto from(User user) {

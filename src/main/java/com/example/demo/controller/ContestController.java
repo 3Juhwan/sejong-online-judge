@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.contest.CreateContestDto;
 import com.example.demo.dto.contest.GetContestByCourseDto;
+import com.example.demo.dto.contest.GetContestDetailDto;
 import com.example.demo.dto.contestProblem.SaveContestProblemToContestDto;
 import com.example.demo.service.ContestProblemService;
 import com.example.demo.service.ContestService;
@@ -11,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,6 +39,12 @@ public class ContestController {
     @PreAuthorize(allAuth)
     public ResponseEntity<List<GetContestByCourseDto>> getContests(@Valid @RequestParam Long courseId) {
         return ResponseEntity.ok(contestService.getContests(courseId));
+    }
+
+    @GetMapping(value = "/contest", params = {"contestId"})
+    @PreAuthorize(allAuth)
+    public ResponseEntity<GetContestDetailDto> getContestInfo(@Valid @RequestParam Long contestId, Principal principal) {
+        return ResponseEntity.ok(contestService.getContestDetail(contestId, principal));
     }
 
     @DeleteMapping("/contest/{contestId}")
