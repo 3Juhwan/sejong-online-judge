@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.course.SaveUserToCourseDto;
-import com.example.demo.dto.course.CreateCourseDto;
-import com.example.demo.dto.course.FindCourseDto;
+import com.example.demo.dto.course.*;
 import com.example.demo.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +21,18 @@ public class CourseController {
 
     private final CourseService courseService;
 
+
     @PostMapping("/course/new")
-    @PreAuthorize(allAuth)
-    public ResponseEntity<Object> createCourse(@Valid @RequestBody CreateCourseDto courseDto) {
-        courseService.saveCourse(courseDto);
+    @PreAuthorize(professorAuth)
+    public ResponseEntity<Object> createCourse(@Valid @RequestBody CreateCourseDto courseDto, Principal principal) {
+        courseService.saveCourse(courseDto, principal);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/course")
+    @PreAuthorize(professorAuth)
+    public ResponseEntity<Object> updateCourse(@Valid @RequestBody UpdateCourseDto courseDto) {
+        courseService.updateCourse(courseDto);
         return ResponseEntity.noContent().build();
     }
 
@@ -41,5 +47,10 @@ public class CourseController {
     @PreAuthorize(allAuth)
     public ResponseEntity<List<FindCourseDto>> getCourses(Principal principal) {
         return ResponseEntity.ok(courseService.getCourses(principal));
+    }
+
+    @GetMapping(value = "/course", params = "courseId")
+    public ResponseEntity<GetCourseDto> getOneCourse(@Valid @RequestParam Long courseId) {
+        return ResponseEntity.ok(courseService.getCourse(courseId));
     }
 }

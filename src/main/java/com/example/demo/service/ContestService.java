@@ -6,6 +6,7 @@ import com.example.demo.dto.contest.GetContestDetailDto;
 import com.example.demo.dto.contestProblem.GetContestProblemByContestDto;
 import com.example.demo.dto.submitstatus.GetSubmitStatusByUserDto;
 import com.example.demo.entity.Contest;
+import com.example.demo.entity.Course;
 import com.example.demo.repository.ContestRepository;
 import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.SubmitStatusRepository;
@@ -28,11 +29,14 @@ public class ContestService {
     private final ContestProblemService contestProblemService;
 
 
-    public void saveContests(List<CreateContestDto> contestDtoList) {
-        List<Contest> contests = contestDtoList.stream()
-                .map(c -> CreateContestDto.toEntity(c, courseRepository.getById(c.getCourseId())))
-                .collect(Collectors.toList());
-        contestRepository.saveAll(contests);
+    public void saveContest(CreateContestDto contestDto) {
+        Course course = courseRepository.getById(contestDto.getCourseId());
+        contestRepository.save(CreateContestDto.toEntity(contestDto, course));
+    }
+
+    public void updateContest(CreateContestDto contestDto, Long contestId) {
+        Contest contest = contestRepository.findById(contestId).orElse(null);
+        contestRepository.save(contest.updateEntity(contestDto));
     }
 
     public void deleteContest(Long contestId) {
@@ -40,8 +44,7 @@ public class ContestService {
     }
 
     public List<GetContestByCourseDto> getContests(Long courseId) {
-        return contestRepository.findAllContestByCourse(courseId).stream()
-                .collect(Collectors.toList());
+        return contestRepository.findAllContestByCourse(courseId).stream().collect(Collectors.toList());
     }
 
     public GetContestDetailDto getContestDetail(Long contestId, Principal principal) {
@@ -58,7 +61,7 @@ public class ContestService {
                 .title(contest.getTitle())
                 .startingTime(contest.getStartingTime())
                 .endingTime(contest.getEndingTime())
-                .contestProblemList(new ArrayList<>())
+                .contestProblemDtoList(new ArrayList<>())
                 .build();
 
         IntStream.range(0, contestProblems.size())

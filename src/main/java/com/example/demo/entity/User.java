@@ -1,8 +1,12 @@
 package com.example.demo.entity;
 
+import com.example.demo.dto.user.CreateUserDto;
 import com.example.demo.dto.user.UpdateUserDto;
 import com.example.demo.entity.util.BaseTime;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -53,9 +57,19 @@ public class User extends BaseTime {
     @OneToMany(mappedBy = "user")
     private List<Submission> submissionList;
 
+
+    public static User toEntity(CreateUserDto userDto, String password) {
+        return User.builder()
+                .username(userDto.getUsername())
+                .password(password)
+                .email(userDto.getEmail())
+                .authority(userDto.getAuth())
+                .activated(true)
+                .build();
+    }
+
     public User updateEntity(UpdateUserDto userDto) {
         this.email = userDto.getEmail();
-        System.out.println("userDto.getEmail() = " + userDto.getEmail());
         return this;
     }
 }

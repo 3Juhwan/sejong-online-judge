@@ -1,6 +1,7 @@
 package com.example.demo.dto.course;
 
 import com.example.demo.entity.Course;
+import com.example.demo.entity.Language;
 import com.example.demo.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,21 +17,17 @@ public class CreateCourseDto {
     private String title;
     private String creator;
     private Long linkedCourseId;
+    private String semester;
+    private String language;
 
 
-    public static Course toEntity(CreateCourseDto courseDto, User creator) {
+    public static Course toEntity(CreateCourseDto courseDto, User creator, Language language) {
         return Course.builder()
                 .title(courseDto.title)
                 .creator(creator)
                 .linkedCourseId(courseDto.linkedCourseId)
-                .build();
-    }
-
-    public static CreateCourseDto from(Course course) {
-        return CreateCourseDto.builder()
-                .title(course.getTitle())
-                .creator(course.getCreator().getUsername())
-                .linkedCourseId(course.getLinkedCourseId())
+                .semester(courseDto.semester)
+                .language(language)
                 .build();
     }
 }

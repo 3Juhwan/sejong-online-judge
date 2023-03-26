@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.dto.contest.CreateContestDto;
 import com.example.demo.entity.util.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,6 +36,21 @@ public class Contest extends BaseTime {
 
     private LocalDateTime endingTime;
 
-//    @OneToMany(mappedBy = "contest")
-//    private List<SubmitStatus> submitStatusList;
+
+    public Contest setDateTime(String startingTime, String endingTime) {
+        if (startingTime == null) {
+            startingTime = "0000-01-01T00:00:00";
+        }
+        if (endingTime == null) {
+            endingTime = "9999-12-31T23:59:59";
+        }
+        this.startingTime = LocalDateTime.parse(startingTime);
+        this.endingTime = LocalDateTime.parse(endingTime);
+        return this;
+    }
+
+    public Contest updateEntity(CreateContestDto contestDto) {
+        this.title = contestDto.getTitle();
+        return this.setDateTime(contestDto.getStartingTime(), contestDto.getEndingTime());
+    }
 }

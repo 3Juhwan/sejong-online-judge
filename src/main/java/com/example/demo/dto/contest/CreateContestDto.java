@@ -7,8 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Builder
 @AllArgsConstructor
@@ -22,18 +20,10 @@ public class CreateContestDto {
 
 
     public static Contest toEntity(CreateContestDto contestDto, Course course) {
-        return Contest.builder()
+        Contest build = Contest.builder()
                 .title(contestDto.title)
                 .course(course)
-                .startingTime(LocalDateTime.parse(contestDto.startingTime))
-                .endingTime(LocalDateTime.parse(contestDto.endingTime))
                 .build();
-    }
-
-    public static CreateContestDto from(Contest contest) {
-        return CreateContestDto.builder()
-                .title(contest.getTitle())
-                .courseId(contest.getCourse().getId())
-                .build();
+        return build.setDateTime(contestDto.startingTime, contestDto.endingTime);
     }
 }

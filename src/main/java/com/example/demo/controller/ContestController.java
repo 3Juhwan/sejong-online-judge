@@ -30,8 +30,15 @@ public class ContestController {
 
     @PostMapping("/contest/new")
     @PreAuthorize(studentExclusiveAuth)
-    public ResponseEntity<Object> createContest(@Valid @RequestBody List<CreateContestDto> contestDto) {
-        contestService.saveContests(contestDto);
+    public ResponseEntity<Object> createContest(@Valid @RequestBody CreateContestDto contestDto) {
+        contestService.saveContest(contestDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/contest/{contestId}")
+    @PreAuthorize(studentExclusiveAuth)
+    public ResponseEntity<Objects> updateContest(@Valid @RequestBody CreateContestDto contestDto, @PathVariable("contestId") Long contestId) {
+        contestService.updateContest(contestDto, contestId);
         return ResponseEntity.noContent().build();
     }
 
