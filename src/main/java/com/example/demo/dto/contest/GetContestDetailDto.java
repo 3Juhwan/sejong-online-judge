@@ -19,10 +19,10 @@ public class GetContestDetailDto {
     String title;
     LocalDateTime startingTime;
     LocalDateTime endingTime;
-    List<ContestProblem> contestProblemList;
+    List<ContestProblemDto> contestProblemDtoList;
 
     public void from(GetContestProblemByContestDto contestProblemDto, GetSubmitStatusByUserDto submitStatusDto) {
-        ContestProblem contestProblem = ContestProblem.builder()
+        ContestProblemDto contestProblem = ContestProblemDto.builder()
                 .title(contestProblemDto.getTitle())
                 .sequence(contestProblemDto.getSequence())
                 .problemId(contestProblemDto.getProblemId())
@@ -30,13 +30,12 @@ public class GetContestDetailDto {
                 .highScore(submitStatusDto.getHighScore())
                 .submitCnt(submitStatusDto.getSubmitCnt())
                 .build();
-
-        this.contestProblemList.add(contestProblem);
+        this.contestProblemDtoList.add(contestProblem);
     }
 
-    @Getter     // 이거 없으면 spring이 알아서 json으로 바꾸지 못함...
+    @Getter
     @Builder
-    public static class ContestProblem {
+    public static class ContestProblemDto {
         String title;
         Long sequence;
         Long problemId;
@@ -44,4 +43,5 @@ public class GetContestDetailDto {
         Long highScore;
         Long submitCnt;
     }
+
 }

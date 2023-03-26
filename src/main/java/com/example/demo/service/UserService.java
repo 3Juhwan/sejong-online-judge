@@ -28,14 +28,7 @@ public class UserService {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
 
-        User user = User.builder()
-                .username(userDto.getUsername())
-                .password(passwordEncoder.encode(userDto.getPassword()))
-                .email(userDto.getEmail())
-                .authority(userDto.getAuth())
-                .activated(true)
-                .build();
-
+        User user = User.toEntity(userDto, passwordEncoder.encode(userDto.getPassword()));
         return CreateUserDto.from(userRepository.save(user));
     }
 
@@ -52,4 +45,5 @@ public class UserService {
         User user = userRepository.findOneWithAuthorityByUsername(principal.getName()).orElse(null);
         userRepository.save(user.updateEntity(userDto));
     }
+
 }

@@ -34,6 +34,7 @@ public class SubmissionController {
 
     /**
      * 주어진 쿼리에 따라 제출 조회
+     *
      * @param username
      * @param principal
      * @return ResponseEntity<SubmissionDto>
@@ -54,4 +55,5 @@ public class SubmissionController {
     public ResponseEntity<List<GetSubmissionDto>> getSubmissions(@Valid @RequestParam String username, @Valid @RequestParam Long contestProblemId) {
         return ResponseEntity.ok(submissionService.getSubmissionByUserAndProblem(username, contestProblemId));
     }
+
 }

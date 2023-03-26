@@ -44,6 +44,7 @@ public class TestDataController {
 
     /**
      * 테스트데이터 삭제 후 리다이렉트
+     *
      * @param testDataId
      * @return ResponseEntity<Objects>
      */
@@ -69,10 +70,11 @@ public class TestDataController {
      * 주어진 쿼리에 따라 문제에 등록된 테스트데이터 조회
      *
      * @param problemId
-     * @return ResponseEntity<List<TestDataDto>>
+     * @return ResponseEntity<List < TestDataDto>>
      */
     @GetMapping(value = "/testdata", params = {"problemId"})
     public ResponseEntity<List<TestDataDto>> getProblemTestData(@Valid @RequestParam Long problemId) {
         return ResponseEntity.ok(testDataService.getProblemTestData(problemId));
     }
+
 }

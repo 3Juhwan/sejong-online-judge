@@ -23,10 +23,10 @@ public class ContestProblemController {
     private final ContestProblemService contestProblemService;
 
     /**
-     * 주어진 정보로 콘테스트 문제 목록 가져오기
+     * 콘테스트 문제 목록 조회
      *
-     * @param contestId
-     * @param principal
+     * @param contestId 콘테스트 ID
+     * @param principal 인증 정보
      * @return 콘테스트 문제 목록
      */
     @GetMapping(value = "/contest/{contestId}/problems")
