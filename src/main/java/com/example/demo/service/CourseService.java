@@ -31,6 +31,11 @@ public class CourseService {
         Language setLanguage = languageRepository.save(new Language(courseDto.getLanguage()));
         Course course = CreateCourseDto.toEntity(courseDto, creator, setLanguage);
         courseRepository.save(course);
+        saveUserToCourse(SaveUserToCourseDto.builder()
+                            .courseId(course.getId())
+                            .users(creator.getUsername())
+                            .build()
+        );
     }
 
     public void saveUserToCourse(SaveUserToCourseDto courseDto) {
