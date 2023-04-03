@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.contest.CreateContestDto;
 import com.example.demo.dto.contest.GetContestByCourseDto;
 import com.example.demo.dto.contest.GetContestDetailDto;
+import com.example.demo.dto.contest.UpdateContestSequenceDto;
 import com.example.demo.dto.contestProblem.SaveContestProblemToContestDto;
 import com.example.demo.service.ContestProblemService;
 import com.example.demo.service.ContestService;
@@ -65,6 +66,13 @@ public class ContestController {
     @PreAuthorize(studentExclusiveAuth)
     public ResponseEntity<Objects> saveContestProblemToContest(@PathVariable("contestId") Long contestId, @Valid @RequestBody SaveContestProblemToContestDto contestProblemToContestDto) {
         contestProblemService.saveContestProblemToContest(contestId, contestProblemToContestDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/contest/sequence")
+    @PreAuthorize(studentExclusiveAuth)
+    public ResponseEntity<Objects> updateContestSequence(@RequestBody List<UpdateContestSequenceDto> contestDto) {
+        contestDto.stream().forEach(c -> contestService.updateContestSequence(c, c.getContestId()));
         return ResponseEntity.noContent().build();
     }
 

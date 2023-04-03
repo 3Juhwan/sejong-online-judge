@@ -42,10 +42,18 @@ public class Course extends BaseTime {
     @JoinColumn(name = "creator_id")
     private User creator;
 
+    @Builder.Default
+    private Long numberOfContest = 0L;
+
     public Course updateEntity(UpdateCourseDto courseDto) {
         this.title = courseDto.getTitle();
         this.semester = courseDto.getSemester();
         this.language.updateEntity(courseDto.getLanguage());
+        return this;
+    }
+
+    public Course updateEntity(Long numberOfContest) {
+        this.numberOfContest = numberOfContest;
         return this;
     }
 }

@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.contest.CreateContestDto;
 import com.example.demo.dto.contest.GetContestByCourseDto;
 import com.example.demo.dto.contest.GetContestDetailDto;
+import com.example.demo.dto.contest.UpdateContestSequenceDto;
 import com.example.demo.dto.contestProblem.GetContestProblemByContestDto;
 import com.example.demo.dto.submitstatus.GetSubmitStatusByUserDto;
 import com.example.demo.entity.Contest;
@@ -31,10 +32,17 @@ public class ContestService {
 
     public void saveContest(CreateContestDto contestDto) {
         Course course = courseRepository.getById(contestDto.getCourseId());
-        contestRepository.save(CreateContestDto.toEntity(contestDto, course));
+        contestDto.setSequence(course.getNumberOfContest() + 1);
+        Contest savedContest = contestRepository.save(CreateContestDto.toEntity(contestDto, course));
+        courseRepository.save(course.updateEntity(savedContest.getSequence()));
     }
 
     public void updateContest(CreateContestDto contestDto, Long contestId) {
+        Contest contest = contestRepository.findById(contestId).orElse(null);
+        contestRepository.save(contest.updateEntity(contestDto));
+    }
+
+    public void updateContestSequence(UpdateContestSequenceDto contestDto, Long contestId) {
         Contest contest = contestRepository.findById(contestId).orElse(null);
         contestRepository.save(contest.updateEntity(contestDto));
     }
@@ -69,4 +77,5 @@ public class ContestService {
 
         return contestDetail;
     }
+
 }
