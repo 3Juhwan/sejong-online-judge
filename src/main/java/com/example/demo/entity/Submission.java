@@ -58,6 +58,11 @@ public class Submission {
     @Column(updatable = false)
     private LocalDateTime submitTime;
 
+    private Long score;
+
+    @Column(length = 10000)
+    private String result;
+
 
     // Submit Result
     private Long timeUsage;

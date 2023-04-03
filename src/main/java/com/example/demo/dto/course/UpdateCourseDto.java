@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class UpdateCourseDto {
 
-    Language language;
+    private Language language;
     private Long courseId;
     private String title;
     private String semester;

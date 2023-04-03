@@ -9,6 +9,7 @@ import com.example.demo.repository.ContestProblemRepository;
 import com.example.demo.repository.SubmissionRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,16 +24,16 @@ public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final UserRepository userRepository;
     private final ContestProblemRepository contestProblemRepository;
+    private final GradeCodeService gradeCodeService;
 
 
     @Transactional
     public void saveSubmission(CreateSubmissionDto submissionDto) {
-
         User user = userRepository.findByUsername(submissionDto.getUsername()).orElse(null);
         ContestProblem contestProblem = contestProblemRepository.findById(submissionDto.getContestProblemId()).orElse(null);
-
         Submission submission = CreateSubmissionDto.toEntity(submissionDto, user, contestProblem, contestProblem.getProblem());
-        submissionRepository.save(submission);
+        Submission savedSubmission = submissionRepository.save(submission);
+        ResponseEntity<Object> objectResponseEntity = gradeCodeService.gradeSubmission(savedSubmission.getId());
     }
 
     public List<CreateSubmissionDto> getSubmissionByUsername(String username) {
