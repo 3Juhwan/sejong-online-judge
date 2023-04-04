@@ -16,6 +16,7 @@ public class FindCourseDto {
     private Long courseId;
     private Long score;
     private Long total;
+    private String semester;
 
     public static FindCourseDto from(Course course) {
         return FindCourseDto.builder()
@@ -23,6 +24,7 @@ public class FindCourseDto {
                 .courseId(course.getId())
                 .score(0L)
                 .total(0L)
+                .semester(course.getSemester())
                 .build();
     }
 }

@@ -43,7 +43,7 @@ public class CourseController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/courses")
+    @GetMapping("/course-list")
     @PreAuthorize(allAuth)
     public ResponseEntity<List<FindCourseDto>> getCourses(Principal principal) {
         return ResponseEntity.ok(courseService.getCourses(principal));
