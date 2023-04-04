@@ -24,7 +24,7 @@ public class CourseController {
 
     @PostMapping("/course/new")
     @PreAuthorize(professorAuth)
-    public ResponseEntity<Object> createCourse(@Valid @RequestBody CreateCourseDto courseDto, Principal principal) {
+    public ResponseEntity<CreateCourseDto> createCourse(@Valid @RequestBody CreateCourseDto courseDto, Principal principal) {
         return ResponseEntity.ok(courseService.saveCourse(courseDto, principal));
     }
 

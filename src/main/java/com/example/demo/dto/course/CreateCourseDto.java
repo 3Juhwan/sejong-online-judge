@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateCourseDto {
 
+    private Long courseId;
     private String title;
     private String creator;
     private Long linkedCourseId;
@@ -33,6 +34,7 @@ public class CreateCourseDto {
 
     public static CreateCourseDto from(Course course) {
         return CreateCourseDto.builder()
+                .courseId(course.getId())
                 .creator(course.getCreator().getUsername())
                 .title(course.getTitle())
                 .semester(course.getSemester())
