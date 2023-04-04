@@ -31,9 +31,8 @@ public class ContestController {
 
     @PostMapping("/contest/new")
     @PreAuthorize(studentExclusiveAuth)
-    public ResponseEntity<Object> createContest(@Valid @RequestBody CreateContestDto contestDto) {
-        contestService.saveContest(contestDto);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<CreateContestDto> createContest(@Valid @RequestBody CreateContestDto contestDto) {
+        return ResponseEntity.ok(contestService.saveContest(contestDto));
     }
 
     @PutMapping("/contest/{contestId}")

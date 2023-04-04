@@ -30,11 +30,12 @@ public class ContestService {
     private final ContestProblemService contestProblemService;
 
 
-    public void saveContest(CreateContestDto contestDto) {
+    public CreateContestDto saveContest(CreateContestDto contestDto) {
         Course course = courseRepository.getById(contestDto.getCourseId());
         contestDto.setSequence(course.getNumberOfContest() + 1);
         Contest savedContest = contestRepository.save(CreateContestDto.toEntity(contestDto, course));
         courseRepository.save(course.updateEntity(savedContest.getSequence()));
+        return CreateContestDto.from(savedContest);
     }
 
     public void updateContest(CreateContestDto contestDto, Long contestId) {

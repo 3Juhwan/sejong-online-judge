@@ -2,6 +2,7 @@ package com.example.demo.dto.contest;
 
 import com.example.demo.entity.Contest;
 import com.example.demo.entity.Course;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 @Getter
@@ -11,9 +12,12 @@ import lombok.*;
 @NoArgsConstructor
 public class CreateContestDto {
 
+    private Long contestId;
     private String title;
     private Long courseId;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String startingTime;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String endingTime;
     private Long sequence;
 
@@ -25,5 +29,14 @@ public class CreateContestDto {
                 .sequence(contestDto.sequence)
                 .build();
         return build.setDateTime(contestDto.startingTime, contestDto.endingTime);
+    }
+
+    public static CreateContestDto from(Contest contest) {
+        return CreateContestDto.builder()
+                .title(contest.getTitle())
+                .contestId(contest.getId())
+                .courseId(contest.getCourse().getId())
+                .sequence(contest.getSequence())
+                .build();
     }
 }
