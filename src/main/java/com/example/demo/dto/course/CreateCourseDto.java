@@ -30,4 +30,14 @@ public class CreateCourseDto {
                 .language(language)
                 .build();
     }
+
+    public static CreateCourseDto from(Course course) {
+        return CreateCourseDto.builder()
+                .creator(course.getCreator().getUsername())
+                .title(course.getTitle())
+                .semester(course.getSemester())
+                .linkedCourseId(course.getLinkedCourseId())
+                .language(course.getLanguage().toString())
+                .build();
+    }
 }

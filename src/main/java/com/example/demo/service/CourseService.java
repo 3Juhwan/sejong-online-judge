@@ -26,16 +26,17 @@ public class CourseService {
     private final LanguageRepository languageRepository;
 
 
-    public void saveCourse(CreateCourseDto courseDto, Principal principal) {
+    public CreateCourseDto saveCourse(CreateCourseDto courseDto, Principal principal) {
         User creator = userRepository.findByUsername(principal.getName()).orElse(null);
         Language setLanguage = languageRepository.save(new Language(courseDto.getLanguage()));
         Course course = CreateCourseDto.toEntity(courseDto, creator, setLanguage);
-        courseRepository.save(course);
+        Course save = courseRepository.save(course);
+        // 교수 본인 등록
         saveUserToCourse(SaveUserToCourseDto.builder()
                             .courseId(course.getId())
                             .users(creator.getUsername())
-                            .build()
-        );
+                            .build());
+        return CreateCourseDto.from(save);
     }
 
     public void saveUserToCourse(SaveUserToCourseDto courseDto) {

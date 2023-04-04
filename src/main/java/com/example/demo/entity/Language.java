@@ -52,4 +52,20 @@ public class Language {
         this.java = language.getJava();
         this.python = language.getPython();
     }
+
+    public String toString() {
+        if(this.c) {
+            return "c";
+        }
+        else if(this.java) {
+            return "java";
+        }
+        else if(this.cpp) {
+            return "cpp";
+        }
+        else if(this.python) {
+            return "python";
+        }
+        return null;
+    }
 }
