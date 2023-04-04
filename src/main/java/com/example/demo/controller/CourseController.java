@@ -52,4 +52,10 @@ public class CourseController {
     public ResponseEntity<GetCourseDto> getOneCourse(@Valid @RequestParam Long courseId) {
         return ResponseEntity.ok(courseService.getCourse(courseId));
     }
+
+    @DeleteMapping("/course/{courseId}")
+    public ResponseEntity<Object> deleteCourse(@PathVariable("courseId") Long courseId) {
+        courseService.deleteCourse(courseId);
+        return ResponseEntity.noContent().build();
+    }
 }

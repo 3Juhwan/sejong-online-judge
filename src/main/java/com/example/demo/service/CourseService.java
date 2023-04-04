@@ -67,4 +67,8 @@ public class CourseService {
         courseRepository.save(course.updateEntity(courseDto));
     }
 
+    public void deleteCourse(Long courseId) {
+        courseRepository.deleteById(courseId);
+    }
+
 }

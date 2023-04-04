@@ -38,7 +38,7 @@ public class Course extends BaseTime {
     @OneToMany(mappedBy = "course")
     private List<CourseUser> courseUser;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "creator_id")
     private User creator;
 
