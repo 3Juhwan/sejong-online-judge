@@ -34,7 +34,7 @@ public class Problem extends BaseTime {
 
     private Long memoryLimit;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "contest_id")
     private Contest contest;
 
