@@ -35,7 +35,7 @@ public class Course extends BaseTime {
     @OneToMany(mappedBy = "course")
     private List<Contest> contests;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<CourseUser> courseUser;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
