@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.courseuser.SaveCourseUserDto;
 import com.example.demo.dto.courseuser.SaveCourseUserResponseDto;
-import com.example.demo.dto.user.GetListOfCourseUserDto;
+import com.example.demo.dto.courseuser.GetCourseUserDto;
 import com.example.demo.service.CourseUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +30,8 @@ public class CourseUserController {
 
     @GetMapping(value = "/course-user", params = {"courseId"})
     @PreAuthorize(studentExclusiveAuth)
-    public ResponseEntity<GetListOfCourseUserDto> getListOfCourseUser(@Valid @RequestParam Long courseId) {
-        return ResponseEntity.ok(courseUserService.getListOfCourseUser(courseId));
+    public ResponseEntity<GetCourseUserDto> getCourseUser(@Valid @RequestParam Long courseId) {
+        return ResponseEntity.ok(courseUserService.getCourseUser(courseId));
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.demo.dto.user;
+package com.example.demo.dto.courseuser;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetListOfCourseUserDto {
+public class GetCourseUserDto {
 
     String studentList;
     String teachingAssistantList;

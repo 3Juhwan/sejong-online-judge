@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.courseuser.SaveCourseUserDto;
 import com.example.demo.dto.courseuser.SaveCourseUserResponseDto;
-import com.example.demo.dto.user.GetListOfCourseUserDto;
+import com.example.demo.dto.courseuser.GetCourseUserDto;
 import com.example.demo.entity.Course;
 import com.example.demo.entity.CourseUser;
 import com.example.demo.entity.User;
@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,46 +27,30 @@ public class CourseUserService {
         return Arrays.stream(joinedCourseUser.split("\n")).toList();
     }
 
-    private static String joinCourseUser(List<String> splitCourseUser) {
-        return String.join("\n", splitCourseUser);
+    private static String joinCourseUser(List<String> courseUserList) {
+        return String.join("\n", courseUserList);
     }
 
-    private static Boolean isNumericString(String str) {
-        if (str == null) {
-            return false;
-        }
-        int len = str.length();
-        if (len == 0) {
-            return false;
-        }
-        for (int i = 0; i < len; i++) {
-            if (!Character.isDigit(str.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
+    private static List<String> filterUserByAuthority(List<User> userList, String authority) {
+        return userList.stream()
+                .filter(courseUser -> courseUser.getAuthority().equals(authority))
+                .map(User::getUsername)
+                .collect(Collectors.toList());
     }
 
-    public GetListOfCourseUserDto getListOfCourseUser(Long courseId) {
+    public GetCourseUserDto getCourseUser(Long courseId) {
         Course course = courseRepository.findById(courseId).orElse(null);
 
-        List<String> courseUserList = courseUserRepository.findAllCourseUsersByCourse(course).stream()
-                .map(cu -> cu.getUser().getUsername())
-                .filter(username -> isNumericString(username))
-                .toList();
+        List<User> userList = courseUserRepository.findAllCourseUsersByCourse(course).stream()
+                .map(CourseUser::getUser)
+                .collect(Collectors.toList());
 
-        String ta = courseUserList.stream()
-                .filter(c -> c.startsWith("TA"))
-                .findFirst()
-                .orElse(null);
+        String studentList = joinCourseUser(filterUserByAuthority(userList, "ROLE_STUDENT"));
+        String taList = joinCourseUser(filterUserByAuthority(userList, "ROLE_TA"));
 
-        if (ta != null) {
-            courseUserList.remove(ta);
-        }
-
-        return GetListOfCourseUserDto.builder()
-                .studentList(joinCourseUser(courseUserList))
-                .teachingAssistantList(ta)
+        return GetCourseUserDto.builder()
+                .studentList(studentList)
+                .teachingAssistantList(taList)
                 .build();
     }
 
@@ -85,7 +70,6 @@ public class CourseUserService {
 
         HashMap<String, CourseUser> currentUserMap = new HashMap<>();
         for (CourseUser courseUser : currentCourseUserList) {
-
             try {
                 String username = courseUser.getUser().getUsername();
                 currentUserMap.put(username, courseUser);
