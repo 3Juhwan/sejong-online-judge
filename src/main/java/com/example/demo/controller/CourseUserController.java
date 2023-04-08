@@ -22,16 +22,16 @@ public class CourseUserController {
 
     private final CourseUserService courseUserService;
 
-    @GetMapping(value = "/course-user", params = {"courseId"})
-    @PreAuthorize(studentExclusiveAuth)
-    public ResponseEntity<GetListOfCourseUserDto> getListOfCourseUser(@Valid @RequestParam Long courseId) {
-        return ResponseEntity.ok(courseUserService.getListOfCourseUser(courseId));
-    }
-
     @PostMapping("/course-user")
     @PreAuthorize(professorAuth)
     public ResponseEntity<SaveCourseUserResponseDto> saveCourseUser(@Valid @RequestBody SaveCourseUserDto courseDto) {
         return ResponseEntity.ok(courseUserService.saveCourseUser(courseDto));
+    }
+
+    @GetMapping(value = "/course-user", params = {"courseId"})
+    @PreAuthorize(studentExclusiveAuth)
+    public ResponseEntity<GetListOfCourseUserDto> getListOfCourseUser(@Valid @RequestParam Long courseId) {
+        return ResponseEntity.ok(courseUserService.getListOfCourseUser(courseId));
     }
 
 }

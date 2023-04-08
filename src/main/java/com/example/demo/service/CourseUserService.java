@@ -80,8 +80,12 @@ public class CourseUserService {
         // 현재 등록된 유저 정보
         List<CourseUser> currentCourseUserList = courseUserRepository.findAllCourseUsersByCourse(course);
 
+        CourseUser professor = courseUserRepository.findByUser(course.getCreator());
+        currentCourseUserList.remove(professor);
+
         HashMap<String, CourseUser> currentUserMap = new HashMap<>();
         for (CourseUser courseUser : currentCourseUserList) {
+
             try {
                 String username = courseUser.getUser().getUsername();
                 currentUserMap.put(username, courseUser);

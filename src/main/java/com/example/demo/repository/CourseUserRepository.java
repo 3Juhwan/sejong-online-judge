@@ -14,4 +14,6 @@ public interface CourseUserRepository extends JpaRepository<CourseUser, Long> {
     List<CourseUser> findCourseUsersByUser(User user);
 
     List<CourseUser> findAllCourseUsersByCourse(Course course);
+
+    CourseUser findByUser(User user);
 }
