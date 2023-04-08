@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface ContestRepository extends JpaRepository<Contest, Long> {
 
-    @Query("select c.title as title, c.id as id, c.sequence as sequence from Contest c where c.course.id = :courseId")
+    @Query("select c.title as title, c.id as contestId, c.sequence as sequence from Contest c where c.course.id = :courseId")
     List<GetContestByCourseDto> findAllContestByCourse(@Param("courseId") Long courseId);
 }

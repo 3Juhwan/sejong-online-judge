@@ -14,6 +14,7 @@ public class CreateContestDto {
 
     private Long contestId;
     private String title;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Long courseId;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String startingTime;
@@ -35,7 +36,6 @@ public class CreateContestDto {
         return CreateContestDto.builder()
                 .title(contest.getTitle())
                 .contestId(contest.getId())
-                .courseId(contest.getCourse().getId())
                 .sequence(contest.getSequence())
                 .build();
     }
