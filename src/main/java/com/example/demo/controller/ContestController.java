@@ -4,8 +4,6 @@ import com.example.demo.dto.contest.CreateContestDto;
 import com.example.demo.dto.contest.GetContestByCourseDto;
 import com.example.demo.dto.contest.GetContestDetailDto;
 import com.example.demo.dto.contest.UpdateContestSequenceDto;
-import com.example.demo.dto.contestProblem.SaveContestProblemToContestDto;
-import com.example.demo.service.ContestProblemService;
 import com.example.demo.service.ContestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +24,6 @@ import static com.example.demo.util.AuthUtil.studentExclusiveAuth;
 public class ContestController {
 
     private final ContestService contestService;
-    private final ContestProblemService contestProblemService;
 
 
     @PostMapping("/contest/new")
@@ -61,17 +58,13 @@ public class ContestController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/contest/{contestId}/problems")
-    @PreAuthorize(studentExclusiveAuth)
-    public ResponseEntity<Objects> saveContestProblemToContest(@PathVariable("contestId") Long contestId, @Valid @RequestBody SaveContestProblemToContestDto contestProblemToContestDto) {
-        contestProblemService.saveContestProblemToContest(contestId, contestProblemToContestDto);
-        return ResponseEntity.noContent().build();
-    }
-
     @PostMapping("/contest/sequence")
     @PreAuthorize(studentExclusiveAuth)
     public ResponseEntity<Objects> updateContestSequence(@RequestBody List<UpdateContestSequenceDto> contestDto) {
-        contestDto.stream().forEach(c -> contestService.updateContestSequence(c, c.getContestId()));
+        contestDto.forEach(contest -> {
+            Long contestId = contest.getContestId();
+            contestService.updateContestSequence(contest, contestId);
+        });
         return ResponseEntity.noContent().build();
     }
 

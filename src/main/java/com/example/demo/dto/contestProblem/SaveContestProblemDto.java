@@ -11,7 +11,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SaveContestProblemToContestDto {
+public class SaveContestProblemDto {
+
+    private Long contestId;
     private List<ProblemInfo> problemList;
 
     @Getter

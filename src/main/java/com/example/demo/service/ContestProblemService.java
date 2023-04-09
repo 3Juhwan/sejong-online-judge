@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.contestProblem.GetContestProblemByContestDto;
-import com.example.demo.dto.contestProblem.SaveContestProblemToContestDto;
+import com.example.demo.dto.contestProblem.SaveContestProblemDto;
+import com.example.demo.dto.contestProblem.SaveContestProblemDto.ProblemInfo;
+import com.example.demo.dto.contestProblem.SaveContestProblemResponseDto;
 import com.example.demo.entity.Contest;
 import com.example.demo.entity.ContestProblem;
 import com.example.demo.entity.Problem;
@@ -23,17 +25,15 @@ public class ContestProblemService {
     private final ProblemRepository problemRepository;
 
 
-    public void saveContestProblemToContest(Long contestId, SaveContestProblemToContestDto registerProblemDto) {
-        Contest contest = contestRepository.findById(contestId).orElse(null);
-        List<Problem> problems = registerProblemDto.getProblemList()
-                .stream()
-                .map(p -> problemRepository.findById(p.getProblemId()).orElse(null))
-                .toList();
-        int idx = 0;
-        for (Problem problem : problems) {
-            ContestProblem contestProblem = ContestProblem.toEntity(registerProblemDto.getProblemList().get(idx++), problem, contest);
-            contestProblemRepository.save(contestProblem);
+    public SaveContestProblemResponseDto saveContestProblem(SaveContestProblemDto registerProblemDto) {
+        Contest contest = contestRepository.findById(registerProblemDto.getContestId()).orElse(null);
+        SaveContestProblemResponseDto responseDto = new SaveContestProblemResponseDto(contest.getId());
+        for (ProblemInfo problemInfo : registerProblemDto.getProblemList()) {
+            Problem problem = problemRepository.findById(problemInfo.getProblemId()).orElse(null);
+            ContestProblem contestProblem = ContestProblem.toEntity(problemInfo, problem, contest);
+            responseDto.addProblemInfo(contestProblemRepository.save(contestProblem));
         }
+        return responseDto;
     }
 
     public List<GetContestProblemByContestDto> getContestProblems(Long contestId, Principal principal) {
