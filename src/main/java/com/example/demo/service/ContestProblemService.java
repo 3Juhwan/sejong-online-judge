@@ -13,7 +13,6 @@ import com.example.demo.repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.List;
 
 @Service
@@ -36,8 +35,7 @@ public class ContestProblemService {
         return responseDto;
     }
 
-    public List<GetContestProblemByContestDto> getContestProblems(Long contestId, Principal principal) {
-        List<GetContestProblemByContestDto> contestProblems = contestProblemRepository.findAllContestProblemByContest(contestId);
-        return contestProblems;
+    public List<GetContestProblemByContestDto> getContestProblemList(Long contestId) {
+        return contestProblemRepository.findAllContestProblemByContest(contestId);
     }
 }

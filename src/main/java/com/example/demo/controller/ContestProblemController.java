@@ -10,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 
 import static com.example.demo.util.AuthUtil.allAuth;
@@ -30,16 +29,15 @@ public class ContestProblemController {
     }
 
     /**
-     * 콘테스트 문제 목록 조회
+     * deprecated
      *
      * @param contestId 콘테스트 ID
-     * @param principal 인증 정보
      * @return 콘테스트 문제 목록
      */
-    @GetMapping(value = "/contest/{contestId}/problems")
+    @GetMapping(value = "/contest-problem", params = "contestId")
     @PreAuthorize(allAuth)
-    public ResponseEntity<List<GetContestProblemByContestDto>> getContestProblems(@PathVariable("contestId") Long contestId, Principal principal) {
-        return ResponseEntity.ok(contestProblemService.getContestProblems(contestId, principal));
+    public ResponseEntity<List<GetContestProblemByContestDto>> getContestProblemList(@RequestParam Long contestId) {
+        return ResponseEntity.ok(contestProblemService.getContestProblemList(contestId));
     }
 
 }

@@ -37,12 +37,11 @@ public class SubmitStatus extends BaseTime {
     @OneToMany(mappedBy = "submitStatus")
     private List<Submission> submissionList;
 
-    public static SubmitStatus getInitEntity(User user) {
-        return SubmitStatus.builder()
-                .user(user)
-                .highScore(0L)
-                .submitCnt(0L)
-                .build();
+    public SubmitStatus(User user, ContestProblem contestProblem) {
+        this.user = user;
+        this.contestProblem = contestProblem;
+        this.highScore = 0L;
+        this.submitCnt = 0L;
     }
 
     public SubmitStatus updateEntity(UpdateSubmitStatusDto submitStatusDto) {

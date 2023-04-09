@@ -8,9 +8,8 @@ import com.example.demo.dto.contestProblem.GetContestProblemByContestDto;
 import com.example.demo.dto.submitstatus.GetSubmitStatusByUserDto;
 import com.example.demo.entity.Contest;
 import com.example.demo.entity.Course;
-import com.example.demo.repository.ContestRepository;
-import com.example.demo.repository.CourseRepository;
-import com.example.demo.repository.SubmitStatusRepository;
+import com.example.demo.entity.SubmitStatus;
+import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +27,8 @@ public class ContestService {
     private final CourseRepository courseRepository;
     private final SubmitStatusRepository submitStatusRepository;
     private final ContestProblemService contestProblemService;
+    private final ContestProblemRepository contestProblemRepository;
+    private final UserRepository userRepository;
 
 
     public CreateContestDto saveContest(CreateContestDto contestDto) {
@@ -53,17 +54,24 @@ public class ContestService {
     }
 
     public List<GetContestByCourseDto> getContests(Long courseId) {
-        return contestRepository.findAllContestByCourse(courseId).stream().collect(Collectors.toList());
+        return contestRepository.findAllContestByCourse(courseId).stream().toList();
     }
 
     public GetContestDetailDto getContestDetail(Long contestId, Principal principal) {
         Contest contest = contestRepository.findById(contestId).orElse(null);
         String username = principal.getName();
 
-        List<GetContestProblemByContestDto> contestProblems = contestProblemService.getContestProblems(contestId, principal);
-        List<GetSubmitStatusByUserDto> submitStatuses = contestProblems.stream()
-                .map(contestProblem -> submitStatusRepository.
-                        findByUserAndContestProblem(username, contestProblem.getContestProblemId()).orElse(null))
+        List<GetContestProblemByContestDto> contestProblemList = contestProblemService.getContestProblemList(contestId);
+
+        List<GetSubmitStatusByUserDto> submitStatuseList = contestProblemList.stream()
+                .map(contestProblem -> {
+                    GetSubmitStatusByUserDto getSubmitStatusByUserDto = submitStatusRepository.findByUserAndContestProblem(username, contestProblem.getContestProblemId()).orElse(null);
+                    if (getSubmitStatusByUserDto == null) {
+                        SubmitStatus submitStatus = new SubmitStatus(userRepository.findByUsername(username).orElse(null), contestProblemRepository.findById(contestProblem.getContestProblemId()).orElse(null));
+                        submitStatusRepository.save(submitStatus);
+                    }
+                    return submitStatusRepository.findByUserAndContestProblem(username, contestProblem.getContestProblemId()).orElse(null);
+                })
                 .toList();
 
         GetContestDetailDto contestDetail = GetContestDetailDto.builder()
@@ -73,8 +81,8 @@ public class ContestService {
                 .contestProblemDtoList(new ArrayList<>())
                 .build();
 
-        IntStream.range(0, contestProblems.size())
-                .forEach(i -> contestDetail.from(contestProblems.get(i), submitStatuses.get(i)));
+        IntStream.range(0, contestProblemList.size())
+                .forEach(i -> contestDetail.from(contestProblemList.get(i), submitStatuseList.get(i)));
 
         return contestDetail;
     }
