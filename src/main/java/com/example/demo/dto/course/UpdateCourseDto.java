@@ -1,21 +1,14 @@
 package com.example.demo.dto.course;
 
+import com.example.demo.dto.language.GetLanguageListDto;
 import lombok.Getter;
 
 @Getter
 public class UpdateCourseDto {
 
-    private Language language;
+    private GetLanguageListDto language;
     private Long courseId;
     private String title;
     private String semester;
-
-    @Getter
-    static public class Language {
-        Boolean python;
-        Boolean c;
-        Boolean cpp;
-        Boolean java;
-    }
 
 }

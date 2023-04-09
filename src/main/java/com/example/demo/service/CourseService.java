@@ -1,6 +1,9 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.course.*;
+import com.example.demo.dto.course.CreateCourseDto;
+import com.example.demo.dto.course.FindCourseDto;
+import com.example.demo.dto.course.GetCourseDto;
+import com.example.demo.dto.course.UpdateCourseDto;
 import com.example.demo.entity.Course;
 import com.example.demo.entity.CourseUser;
 import com.example.demo.entity.Language;
@@ -29,24 +32,9 @@ public class CourseService {
     public CreateCourseDto saveCourse(CreateCourseDto courseDto, Principal principal) {
         User creator = userRepository.findByUsername(principal.getName()).orElse(null);
         Language setLanguage = languageRepository.save(new Language(courseDto.getLanguage()));
-        Course course = CreateCourseDto.toEntity(courseDto, creator, setLanguage);
-        Course save = courseRepository.save(course);
-        // 교수 본인 등록
-        saveUserToCourse(SaveUserToCourseDto.builder()
-                            .courseId(course.getId())
-                            .users(creator.getUsername())
-                            .build());
-        return CreateCourseDto.from(save);
-    }
-
-    public void saveUserToCourse(SaveUserToCourseDto courseDto) {
-        courseDto.splitUsers();
-        for (String user : courseDto.getUserList()) {
-            User findUser = userRepository.findByUsername(user).orElse(null);
-            Course findCourse = courseRepository.findById(courseDto.getCourseId()).orElse(null);
-            CourseUser courseUser = new CourseUser(findUser, findCourse);
-            courseUserRepository.save(courseUser);
-        }
+        Course savedCourse = courseRepository.save(CreateCourseDto.toEntity(courseDto, creator, setLanguage));
+        courseUserRepository.save(new CourseUser(creator, savedCourse));    // 교수 본인 등록
+        return CreateCourseDto.from(savedCourse);
     }
 
     public GetCourseDto getCourse(Long courseId) {

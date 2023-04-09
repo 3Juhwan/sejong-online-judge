@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import com.example.demo.dto.course.UpdateCourseDto;
+import com.example.demo.dto.language.GetLanguageListDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,45 +27,14 @@ public class Language {
     @OneToOne(mappedBy = "language")
     private Course course;
 
-
-    public Language(String setLanguage) {
-        this.c = false;
-        this.cpp = false;
-        this.java = false;
-        this.python = false;
-
-        if (setLanguage == null) {
-            return;
-        }
-
-        switch (setLanguage) {
-            case "c" -> this.c = true;
-            case "cpp" -> this.cpp = true;
-            case "java" -> this.java = true;
-            case "python" -> this.python = true;
-        }
+    public Language(GetLanguageListDto language) {
+        updateEntity(language);
     }
 
-    public void updateEntity(UpdateCourseDto.Language language) {
+    public void updateEntity(GetLanguageListDto language) {
         this.c = language.getC();
         this.cpp = language.getCpp();
         this.java = language.getJava();
         this.python = language.getPython();
-    }
-
-    public String toString() {
-        if(this.c) {
-            return "c";
-        }
-        else if(this.java) {
-            return "java";
-        }
-        else if(this.cpp) {
-            return "cpp";
-        }
-        else if(this.python) {
-            return "python";
-        }
-        return null;
     }
 }

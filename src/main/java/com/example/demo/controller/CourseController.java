@@ -1,6 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.course.*;
+import com.example.demo.dto.course.CreateCourseDto;
+import com.example.demo.dto.course.FindCourseDto;
+import com.example.demo.dto.course.GetCourseDto;
+import com.example.demo.dto.course.UpdateCourseDto;
 import com.example.demo.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,13 +35,6 @@ public class CourseController {
     @PreAuthorize(professorAuth)
     public ResponseEntity<Object> updateCourse(@Valid @RequestBody UpdateCourseDto courseDto) {
         courseService.updateCourse(courseDto);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/course/register")
-    @PreAuthorize(professorAuth)
-    public ResponseEntity<Object> saveUserToCourse(@Valid @RequestBody SaveUserToCourseDto courseDto) {
-        courseService.saveUserToCourse(courseDto);
         return ResponseEntity.noContent().build();
     }
 

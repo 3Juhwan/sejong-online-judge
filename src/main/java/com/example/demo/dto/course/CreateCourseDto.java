@@ -1,5 +1,6 @@
 package com.example.demo.dto.course;
 
+import com.example.demo.dto.language.GetLanguageListDto;
 import com.example.demo.entity.Course;
 import com.example.demo.entity.Language;
 import com.example.demo.entity.User;
@@ -17,16 +18,14 @@ public class CreateCourseDto {
     private Long courseId;
     private String title;
     private String creator;
-    private Long linkedCourseId;
     private String semester;
-    private String language;
+    private GetLanguageListDto language;
 
 
     public static Course toEntity(CreateCourseDto courseDto, User creator, Language language) {
         return Course.builder()
                 .title(courseDto.title)
                 .creator(creator)
-                .linkedCourseId(courseDto.linkedCourseId)
                 .semester(courseDto.semester)
                 .language(language)
                 .build();
@@ -38,8 +37,7 @@ public class CreateCourseDto {
                 .creator(course.getCreator().getUsername())
                 .title(course.getTitle())
                 .semester(course.getSemester())
-                .linkedCourseId(course.getLinkedCourseId())
-                .language(course.getLanguage().toString())
+                .language(GetLanguageListDto.from(course.getLanguage()))
                 .build();
     }
 }
