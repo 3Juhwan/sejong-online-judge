@@ -6,38 +6,27 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
-
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateProblemDto {
+public class GetProblemInfoDto {
 
+    private Long problemId;
     private String title;
     private String content;
     private Long timeLimit;
     private Long memoryLimit;
     private String dirPath;
 
-
-    public static CreateProblemDto from(@NotNull Problem problem) {
-        return CreateProblemDto.builder()
+    public static GetProblemInfoDto from(Problem problem) {
+        return GetProblemInfoDto.builder()
+                .problemId(problem.getId())
                 .title(problem.getTitle())
                 .content(problem.getContent())
                 .timeLimit(problem.getTimeLimit())
                 .memoryLimit(problem.getMemoryLimit())
                 .dirPath(problem.getDirPath())
-                .build();
-    }
-
-    public static Problem toEntity(@NotNull CreateProblemDto problemDto) {
-        return Problem.builder()
-                .title(problemDto.getTitle())
-                .content(problemDto.getContent())
-                .timeLimit(problemDto.getTimeLimit())
-                .memoryLimit(problemDto.getMemoryLimit())
-                .dirPath(problemDto.getDirPath())
                 .build();
     }
 }

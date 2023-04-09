@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.problem.GetProblemDto;
 import com.example.demo.dto.problem.CreateProblemDto;
+import com.example.demo.dto.problem.GetProblemInfoDto;
 import com.example.demo.dto.problem.UpdateProblemDto;
 import com.example.demo.entity.Problem;
 import com.example.demo.repository.ProblemRepository;
@@ -14,24 +14,24 @@ public class ProblemService {
 
     private final ProblemRepository problemRepository;
 
-    public void saveProblem(CreateProblemDto problemDto) {
+    public CreateProblemDto saveProblem(CreateProblemDto problemDto) {
         Problem problem = CreateProblemDto.toEntity(problemDto);
-        problemRepository.save(problem);
+        return CreateProblemDto.from(problemRepository.save(problem));
     }
 
-    public CreateProblemDto updateProblem(UpdateProblemDto problemDto) {
+    public UpdateProblemDto updateProblem(UpdateProblemDto problemDto) {
         Problem updatedProblem = problemRepository
-                .findById(problemDto.getProblemId()).get()
+                .findById(problemDto.getProblemId()).orElse(null)
                 .updateEntity(problemDto);
-        return CreateProblemDto.from(problemRepository.save(updatedProblem));
+        return UpdateProblemDto.from(problemRepository.save(updatedProblem));
     }
 
     public void deleteProblem(Long problemId) {
         problemRepository.deleteById(problemId);
     }
 
-    public GetProblemDto getOneProblem(Long problemId) {
-        return GetProblemDto.from(problemRepository.findById(problemId).get());
+    public GetProblemInfoDto getOneProblem(Long problemId) {
+        return GetProblemInfoDto.from(problemRepository.findById(problemId).orElse(null));
     }
 
 }

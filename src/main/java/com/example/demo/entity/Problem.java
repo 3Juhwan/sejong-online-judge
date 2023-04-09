@@ -34,6 +34,8 @@ public class Problem extends BaseTime {
 
     private Long memoryLimit;
 
+    private String dirPath;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "contest_id")
     private Contest contest;
