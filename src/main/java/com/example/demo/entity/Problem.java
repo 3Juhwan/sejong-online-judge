@@ -55,6 +55,7 @@ public class Problem extends BaseTime {
         this.content = problemDto.getContent();
         this.timeLimit = problemDto.getTimeLimit();
         this.memoryLimit = problemDto.getMemoryLimit();
+        this.dirPath = problemDto.getDirPath();
         return this;
     }
 }

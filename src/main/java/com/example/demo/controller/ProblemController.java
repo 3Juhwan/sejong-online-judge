@@ -28,7 +28,7 @@ public class ProblemController {
         return ResponseEntity.ok(problemService.saveProblem(problemDto));
     }
 
-    @PutMapping("/problem/{id}")
+    @PutMapping("/problem")
     @PreAuthorize(studentExclusiveAuth)
     public ResponseEntity<UpdateProblemDto> updateProblem(@Valid @RequestBody UpdateProblemDto problemDto) {
         return ResponseEntity.ok(problemService.updateProblem(problemDto));
