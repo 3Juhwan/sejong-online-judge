@@ -45,11 +45,13 @@ public class CourseController {
     }
 
     @GetMapping(value = "/course", params = "courseId")
+    @PreAuthorize(allAuth)
     public ResponseEntity<GetCourseDto> getOneCourse(@Valid @RequestParam Long courseId) {
         return ResponseEntity.ok(courseService.getCourse(courseId));
     }
 
     @DeleteMapping("/course/{courseId}")
+    @PreAuthorize(professorAuth)
     public ResponseEntity<Object> deleteCourse(@PathVariable("courseId") Long courseId) {
         courseService.deleteCourse(courseId);
         return ResponseEntity.noContent().build();

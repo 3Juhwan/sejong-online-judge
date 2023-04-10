@@ -53,4 +53,9 @@ public class TestDataController {
         return ResponseEntity.ok(testDataService.getTestDataByProblem(problemId));
     }
 
+    @GetMapping(value = "/testdata/sample", params = {"problemId"})
+    public ResponseEntity<List<GetTestDataDto>> getSampleTestDataByProblem(@Valid @RequestParam Long problemId) {
+        return ResponseEntity.ok(testDataService.getSampleTestDataByProblem(problemId));
+    }
+
 }

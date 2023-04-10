@@ -1,6 +1,7 @@
 package com.example.demo.dto.problem;
 
 import com.example.demo.entity.Problem;
+import com.example.demo.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,13 +32,14 @@ public class CreateProblemDto {
                 .build();
     }
 
-    public static Problem toEntity(@NotNull CreateProblemDto problemDto) {
+    public static Problem toEntity(@NotNull CreateProblemDto problemDto, User user) {
         return Problem.builder()
                 .title(problemDto.getTitle())
                 .content(problemDto.getContent())
                 .timeLimit(problemDto.getTimeLimit())
                 .memoryLimit(problemDto.getMemoryLimit())
                 .dirPath(problemDto.getDirPath())
+                .creator(user)
                 .build();
     }
 }
