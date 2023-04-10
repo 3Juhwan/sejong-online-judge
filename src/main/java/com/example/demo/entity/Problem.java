@@ -40,7 +40,7 @@ public class Problem extends BaseTime {
     @JoinColumn(name = "contest_id")
     private Contest contest;
 
-    @OneToMany(mappedBy = "problem")
+    @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
     private List<TestData> testDataList;
 
     @OneToMany(mappedBy = "problem")
