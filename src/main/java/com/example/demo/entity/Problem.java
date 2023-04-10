@@ -37,6 +37,9 @@ public class Problem extends BaseTime {
     private String dirPath;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    private User creator;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "contest_id")
     private Contest contest;
 
