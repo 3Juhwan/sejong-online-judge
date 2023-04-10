@@ -48,6 +48,9 @@ public class User extends BaseTime {
     @NotNull
     private boolean activated;
 
+    @OneToMany(mappedBy = "creator")
+    private List<Problem> problemsList;
+
     @OneToMany(mappedBy = "user")
     private List<CourseUser> courseUser;
 
