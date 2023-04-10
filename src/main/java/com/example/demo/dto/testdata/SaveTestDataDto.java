@@ -12,24 +12,25 @@ import javax.validation.constraints.NotNull;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TestDataDto {
+public class SaveTestDataDto {
 
-    private Long id;
-
+    private Long testDataId;
     private Long problemId;
-
     private String input;
-
     private String output;
+    private Boolean hidden;
 
-    public static TestDataDto from(@NotNull TestData testData) {
-        return TestDataDto.builder()
+    public static SaveTestDataDto from(@NotNull TestData testData) {
+        return SaveTestDataDto.builder()
+                .testDataId(testData.getId())
+                .problemId(testData.getProblem().getId())
                 .input(testData.getInput())
                 .output(testData.getOutput())
+                .hidden(testData.getHidden())
                 .build();
     }
 
-    public static TestData toEntity(@NotNull TestDataDto testDataDto) {
+    public static TestData toEntity(@NotNull SaveTestDataDto testDataDto) {
         return TestData.builder()
                 .input(testDataDto.getInput())
                 .output(testDataDto.getOutput())

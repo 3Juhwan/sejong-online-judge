@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.testdata.TestDataDto;
+import com.example.demo.dto.testdata.GetTestDataDto;
+import com.example.demo.dto.testdata.SaveTestDataDto;
 import com.example.demo.entity.Problem;
 import com.example.demo.entity.TestData;
 import com.example.demo.repository.ProblemRepository;
@@ -9,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,41 +21,37 @@ public class TestDataService {
     private final TestDataRepository testDataRepository;
 
     @Transactional
-    public TestDataDto saveTestData(TestDataDto testDataDto) {
-        Problem problem = problemRepository.findById(testDataDto.getProblemId()).get();
+    public SaveTestDataDto saveTestData(SaveTestDataDto testDataDto) {
+        Problem problem = problemRepository.findById(testDataDto.getProblemId()).orElse(null);
 
         TestData testData = TestData.builder()
                 .problem(problem)
                 .input(testDataDto.getInput())
                 .output(testDataDto.getOutput())
+                .hidden(testDataDto.getHidden())
                 .build();
 
-        return TestDataDto.from(testDataRepository.save(testData));
+        return SaveTestDataDto.from(testDataRepository.save(testData));
     }
 
     @Transactional
-    public TestDataDto updateTestData(TestDataDto testDataDto) {
-        TestData updatedTestData = testDataRepository.findById(testDataDto.getId())
-                .get()
+    public SaveTestDataDto updateTestData(SaveTestDataDto testDataDto) {
+        TestData updatedTestData = testDataRepository.findById(testDataDto.getTestDataId()).orElse(null)
                 .updateEntity(testDataDto);
-
-        return TestDataDto.from(testDataRepository.save(updatedTestData));
+        return SaveTestDataDto.from(testDataRepository.save(updatedTestData));
     }
 
+    @Transactional
     public void deleteTestData(Long testDataId) {
         testDataRepository.deleteById(testDataId);
     }
 
-    public TestDataDto getSingleTestData(Long testDataId) {
-        return TestDataDto.from(testDataRepository.findById(testDataId).get());
+    public GetTestDataDto getTestData(Long testDataId) {
+        return GetTestDataDto.from(testDataRepository.findById(testDataId).orElse(null));
     }
 
-    public List<TestDataDto> getProblemTestData(Long problemId) {
+    public List<GetTestDataDto> getTestDataByProblem(Long problemId) {
         List<TestData> testData = testDataRepository.findByProblemId(problemId);
-        List<TestDataDto> testDataDtoList = new ArrayList<>();
-        for (TestData data : testData) {
-            testDataDtoList.add(TestDataDto.from(data));
-        }
-        return testDataDtoList;
+        return testData.stream().map(GetTestDataDto::from).toList();
     }
 }

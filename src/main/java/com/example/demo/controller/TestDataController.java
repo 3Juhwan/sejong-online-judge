@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.testdata.TestDataDto;
+import com.example.demo.dto.testdata.GetTestDataDto;
+import com.example.demo.dto.testdata.SaveTestDataDto;
 import com.example.demo.service.TestDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
+import static com.example.demo.util.AuthUtil.allAuth;
 import static com.example.demo.util.AuthUtil.studentExclusiveAuth;
 
 @RestController
@@ -20,61 +22,35 @@ public class TestDataController {
 
     private final TestDataService testDataService;
 
-    /**
-     * 테스트데이터 등록
-     *
-     * @param testDataDto
-     * @return ResponseEntity<TestDataDto>
-     */
-    @PostMapping("/new-testdata")
-    public ResponseEntity<TestDataDto> addTestData(@Valid @RequestBody TestDataDto testDataDto) {
+
+    @PostMapping("/testdata/new")
+    @PreAuthorize(studentExclusiveAuth)
+    public ResponseEntity<SaveTestDataDto> saveTestData(@Valid @RequestBody SaveTestDataDto testDataDto) {
         return ResponseEntity.ok(testDataService.saveTestData(testDataDto));
     }
 
-    /**
-     * 테스트데이터 수정
-     *
-     * @param testDataDto
-     * @return ResponseEntity<TestDataDto>
-     */
-    @PostMapping("/update-testdata")
-    public ResponseEntity<TestDataDto> updateTestData(@Valid @RequestBody TestDataDto testDataDto) {
+    @PutMapping("/testdata")
+    @PreAuthorize(studentExclusiveAuth)
+    public ResponseEntity<SaveTestDataDto> updateTestData(@Valid @RequestBody SaveTestDataDto testDataDto) {
         return ResponseEntity.ok(testDataService.updateTestData(testDataDto));
     }
 
-    /**
-     * 테스트데이터 삭제 후 리다이렉트
-     *
-     * @param testDataId
-     * @return ResponseEntity<Objects>
-     */
-    @GetMapping("/testdata/{id}/delete")
+    @DeleteMapping("/testdata/{id}")
     @PreAuthorize(studentExclusiveAuth)
     public ResponseEntity<Objects> deleteTestData(@PathVariable("id") Long testDataId) {
         testDataService.deleteTestData(testDataId);
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * 주어진 쿼리에 따라 테스트데이터 조회
-     *
-     * @param testDataId
-     * @return ResponseEntity<TestDataDto>
-     */
     @GetMapping(value = "/testdata", params = {"testDataId"})
-    public ResponseEntity<TestDataDto> getSingleTestData(@Valid @RequestParam Long testDataId) {
-        return ResponseEntity.ok(testDataService.getSingleTestData(testDataId));
+    @PreAuthorize(allAuth)
+    public ResponseEntity<GetTestDataDto> getTestData(@Valid @RequestParam Long testDataId) {
+        return ResponseEntity.ok(testDataService.getTestData(testDataId));
     }
 
-    /**
-     * 주어진 쿼리에 따라 문제에 등록된 테스트데이터 조회
-     *
-     * @param problemId
-     * @return ResponseEntity<List < TestDataDto>>
-     */
     @GetMapping(value = "/testdata", params = {"problemId"})
-    public ResponseEntity<List<TestDataDto>> getProblemTestData(@Valid @RequestParam Long problemId) {
-        return ResponseEntity.ok(testDataService.getProblemTestData(problemId));
+    public ResponseEntity<List<GetTestDataDto>> getTestDataByProblem(@Valid @RequestParam Long problemId) {
+        return ResponseEntity.ok(testDataService.getTestDataByProblem(problemId));
     }
 
 }

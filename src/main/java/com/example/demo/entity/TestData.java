@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import com.example.demo.dto.testdata.TestDataDto;
+import com.example.demo.dto.testdata.SaveTestDataDto;
 import com.example.demo.entity.util.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,9 +29,12 @@ public class TestData extends BaseTime {
 
     private String output;
 
-    public TestData updateEntity(TestDataDto testDataDto) {
+    private Boolean hidden;
+
+    public TestData updateEntity(SaveTestDataDto testDataDto) {
         this.input = testDataDto.getInput();
         this.output = testDataDto.getOutput();
+        this.hidden = testDataDto.getHidden();
         return this;
     }
 
