@@ -46,8 +46,14 @@ public class ProblemController {
 
     @GetMapping(value = "/problem", params = "problemId")
     @PreAuthorize(allAuth)
-    public ResponseEntity<GetProblemInfoDto> getOneProblem(@Valid @RequestParam Long problemId) {
-        return ResponseEntity.ok(problemService.getOneProblem(problemId));
+    public ResponseEntity<GetProblemInfoDto> getSingleProblemByProblemId(@Valid @RequestParam("problemId") Long problemId) {
+        return ResponseEntity.ok(problemService.getSingleProblemByProblemId(problemId));
+    }
+
+    @GetMapping(value = "/problem", params = "contestProblemId")
+    @PreAuthorize(allAuth)
+    public ResponseEntity<GetProblemInfoDto> getSingleProblemByContestProblemId(@Valid @RequestParam("contestProblemId") Long contestProblemId) {
+        return ResponseEntity.ok(problemService.getSingleProblemByContestProblemId(contestProblemId));
     }
 
     @GetMapping("/problem-list")
