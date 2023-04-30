@@ -1,18 +1,19 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.submission.CreateSubmissionDto;
+import com.example.demo.dto.submission.CreateHiddenSubmissionDto;
+import com.example.demo.dto.submission.CreateSampleSubmissionDto;
+import com.example.demo.dto.submission.CreateSampleSubmissionDto.SampleCase;
 import com.example.demo.dto.submission.GetSubmissionDto;
 import com.example.demo.entity.ContestProblem;
+import com.example.demo.entity.Problem;
 import com.example.demo.entity.Submission;
 import com.example.demo.entity.User;
-import com.example.demo.repository.ContestProblemRepository;
-import com.example.demo.repository.SubmissionRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,33 +26,41 @@ public class SubmissionService {
     private final UserRepository userRepository;
     private final ContestProblemRepository contestProblemRepository;
     private final GradeCodeService gradeCodeService;
+    private final ProblemRepository problemRepository;
+    private final TestDataRepository testDataRepository;
 
+
+    public Object getSampleSubmission(CreateSampleSubmissionDto submissionDto) {
+        return gradeCodeService.gradeSubmission(submissionDto.getSourceCode(), submissionDto.getSampleCaseList()).getBody();
+    }
 
     @Transactional
-    public void saveSubmission(CreateSubmissionDto submissionDto) {
-        User user = userRepository.findByUsername(submissionDto.getUsername()).orElse(null);
+    public Object getHiddenSubmission(CreateSampleSubmissionDto submissionDto, Principal principal) {
         ContestProblem contestProblem = contestProblemRepository.findById(submissionDto.getContestProblemId()).orElse(null);
-        Submission submission = CreateSubmissionDto.toEntity(submissionDto, user, contestProblem, contestProblem.getProblem());
-        Submission savedSubmission = submissionRepository.save(submission);
-        ResponseEntity<Object> objectResponseEntity = gradeCodeService.gradeSubmission(savedSubmission.getId());
+        Problem problem = problemRepository.findById(contestProblem.getId()).orElse(null);
+        List<SampleCase> sampleCases = testDataRepository.findAllTestDataIdByProblem(problem).orElse(null).stream()
+                .map(x -> SampleCase.builder().dataSequence(x.getDataSequence()).inputData(x.getInputData()).outputData(x.getOutputData()).build()).toList();
+        return gradeCodeService.gradeSubmission(submissionDto.getSourceCode(), sampleCases).getBody();
     }
 
-    public List<CreateSubmissionDto> getSubmissionByUsername(String username) {
-        User user = userRepository.findByUsername(username).orElse(null);
-        List<Submission> submissions = submissionRepository.findByUser(user).orElse(null);
-
-        return submissions.stream()
-                .map(CreateSubmissionDto::from)
-                .collect(Collectors.toList());
+    public Submission saveSubmission(CreateHiddenSubmissionDto submissionDto, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName()).orElse(null);
+        ContestProblem contestProblem = contestProblemRepository.findById(submissionDto.getContestProblemId()).orElse(null);
+        Submission submission = CreateHiddenSubmissionDto.toEntity(submissionDto, user, contestProblem, contestProblem.getProblem());
+        return submissionRepository.save(submission);
     }
 
-    public List<GetSubmissionDto> getSubmissionByUserAndProblem(String username, Long contestProblemId) {
+    public List<GetSubmissionDto> getSubmissionByCondition(Principal principal, Long contestProblemId, String username, String status) {
         User user = userRepository.findByUsername(username).orElse(null);
         ContestProblem contestProblem = contestProblemRepository.findById(contestProblemId).orElse(null);
-        return submissionRepository.findAllByUserAndContestProblem(user, contestProblem).orElse(null)
+        return submissionRepository.findAllByConditions(user, contestProblem, status).orElse(null)
                 .stream()
-                .map(GetSubmissionDto::from)
+                .map(submission -> GetSubmissionDto.from(submission, principal, false))
                 .collect(Collectors.toList());
+    }
+
+    public GetSubmissionDto getSubmissionWithSourceCode(Principal principal, Long submissionId) {
+        return GetSubmissionDto.from(submissionRepository.findById(submissionId).orElse(null), principal, true);
     }
 
 }
