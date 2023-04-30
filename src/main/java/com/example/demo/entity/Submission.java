@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import com.example.demo.entity.enums.Language;
 import com.example.demo.entity.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,9 +47,9 @@ public class Submission {
     @NotNull
     private String code;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Language language;
+//    @NotNull
+//    @Enumerated(EnumType.STRING)
+//    private Language language;
 
     private Long length;
 

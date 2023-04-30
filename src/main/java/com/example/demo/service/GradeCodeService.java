@@ -1,55 +1,58 @@
 package com.example.demo.service;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import com.example.demo.dto.submission.CreateSampleSubmissionDto.SampleCase;
+import com.example.demo.dto.submission.SubmissionResponseDto;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class GradeCodeService {
-    public ResponseEntity<Object> gradeSubmission(Long submissionId ) {
-        HashMap<String, Object> result = new HashMap<String, Object>();
-        ResponseEntity<Object> resultMap = new ResponseEntity<>(null,null,200);
-        String url = "http://127.0.0.1:5000/score?submission_id=" + submissionId;
+    public ResponseEntity<Object> gradeSubmission(String sourceCode, List<SampleCase> sampleCaseList) {
+        ResponseEntity<Object> resultMap = new ResponseEntity<>(null, null, 200);
+        String url = "http://127.0.0.1:5000/sample";
+
+        JSONObject body = new JSONObject();
+
+        body.put("source_code", sourceCode);
+
+        JSONArray jsonArray = new JSONArray();
+        for (SampleCase sampleCase : sampleCaseList) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("data_sequence", sampleCase.getDataSequence());
+            jsonObject.put("input_data", sampleCase.getInputData());
+            jsonObject.put("output_data", sampleCase.getOutputData());
+            jsonArray.put(jsonObject);
+        }
+        body.put("test_data_list", jsonArray);
 
         try {
             RestTemplate restTemplate = new RestTemplate();
 
             HttpHeaders header = new HttpHeaders();
-            HttpEntity<?> entity = new HttpEntity<>(header);
+            header.setContentType(MediaType.APPLICATION_JSON);
 
-            UriComponents uri = UriComponentsBuilder.fromHttpUrl(url).build();
+            HttpEntity<?> entity = new HttpEntity<>(body.toString(), header);
 
-            resultMap = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, Object.class);
-
-            result.put("statusCode", resultMap.getStatusCodeValue()); //http status code를 확인
-            result.put("header", resultMap.getHeaders()); //헤더 정보 확인
-            result.put("body", resultMap.getBody()); //실제 데이터 정보 확인
-
-            System.out.println("resultMap.getBody() = " + resultMap.getBody());
+            List<SubmissionResponseDto> body1 = restTemplate.exchange(url, HttpMethod.POST, entity, new ParameterizedTypeReference<List<SubmissionResponseDto>>() {
+            }).getBody();
+            return ResponseEntity.ok(body1);
 
             //에러처리해야댐
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            result.put("statusCode", e.getRawStatusCode());
-            result.put("body"  , e.getStatusText());
             System.out.println("error");
-            System.out.println(e.toString());
+            System.out.println(e);
+            return resultMap;
+        } catch (Exception e) {
+            System.out.println(e);
             return resultMap;
         }
-        catch (Exception e) {
-            result.put("statusCode", "999");
-            result.put("body", "excpetion오류");
-            System.out.println(e.toString());
-            return resultMap;
-        }
-        return resultMap;
     }
 }

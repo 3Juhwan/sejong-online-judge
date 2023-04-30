@@ -51,7 +51,7 @@ public class TestDataService {
     }
 
     public List<GetTestDataDto> getTestDataByProblem(Long problemId) {
-        List<TestData> testData = testDataRepository.findByProblemId(problemId);
+        List<TestData> testData = testDataRepository.findAllByProblemId(problemId);
         return testData.stream().map(GetTestDataDto::from).toList();
     }
 

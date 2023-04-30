@@ -4,7 +4,6 @@ import com.example.demo.entity.ContestProblem;
 import com.example.demo.entity.Problem;
 import com.example.demo.entity.Submission;
 import com.example.demo.entity.User;
-import com.example.demo.entity.enums.Language;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,37 +15,30 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateSubmissionDto {
-
-    private String username;
+public class CreateHiddenSubmissionDto {
     @NotNull
     private Long contestProblemId;
     @NotNull
     private String code;
-    @NotNull
-    private String language;
 
 
-    public static CreateSubmissionDto from(Submission submission) {
+    public static CreateHiddenSubmissionDto from(Submission submission) {
         if (submission == null) {
             return null;
         }
 
-        return CreateSubmissionDto.builder()
-                .username(submission.getUser().getUsername())
+        return CreateHiddenSubmissionDto.builder()
                 .code(submission.getCode())
-                .language(submission.getLanguage().name())
                 .build();
     }
 
-    public static Submission toEntity(CreateSubmissionDto submissionDto, User user, ContestProblem contestProblem, Problem problem) {
+    public static Submission toEntity(CreateHiddenSubmissionDto submissionDto, User user, ContestProblem contestProblem, Problem problem) {
         return Submission.builder()
                 .user(user)
                 .problem(problem)
                 .contestProblem(contestProblem)
                 .code(submissionDto.getCode())
-                .language(Language.find(submissionDto.getLanguage()))
-                .length((long)submissionDto.getCode().length())
+                .length((long) submissionDto.getCode().length())
                 .build();
     }
 }
