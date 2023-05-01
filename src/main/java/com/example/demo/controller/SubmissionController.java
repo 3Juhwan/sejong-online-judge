@@ -4,6 +4,9 @@ import com.example.demo.dto.submission.CreateSampleSubmissionDto;
 import com.example.demo.dto.submission.GetSubmissionDto;
 import com.example.demo.service.SubmissionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +16,6 @@ import java.security.Principal;
 import java.util.List;
 
 import static com.example.demo.util.AuthUtil.allAuth;
-//import static com.example.demo.validation.AuthValidation.checkValidUsername;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -34,30 +36,18 @@ public class SubmissionController {
         return ResponseEntity.ok(submissionService.getHiddenSubmission(submissionDto, principal));
     }
 
-//    @GetMapping(value = "/submission", params = {"username"})
-//    @PreAuthorize(allAuth)
-//    public ResponseEntity<List<CreateHiddenSubmissionDto>> getSubmissionByUser(@Valid @RequestParam String username, Principal principal) {
-////        try {
-////            checkValidUsername(principal, username);
-//        return ResponseEntity.ok(submissionService.getSubmissionByUsername(username));
-////        } catch (Exception e) {
-////            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item Not Found");
-////        }
-//    }
-
     @GetMapping(value = "/submission")
     @PreAuthorize(allAuth)
-    public ResponseEntity<List<GetSubmissionDto>> getSubmissions(@Valid @RequestParam(value = "username", required = false) String username,
-                                                                 @Valid @RequestParam(value = "contestProblemId", required = false) Long contestProblemId,
-                                                                 @Valid @RequestParam(value = "status", required = false) String status,
-                                                                 Principal principal) {
-        return ResponseEntity.ok(submissionService.getSubmissionByCondition(principal, contestProblemId, username, status));
+    public ResponseEntity<List<GetSubmissionDto>> getSubmissionList(@Valid @RequestParam(value = "username", required = false) String username,
+                                                                    @Valid @RequestParam(value = "contestProblemId", required = false) Long contestProblemId,
+                                                                    @Valid @RequestParam(value = "status", required = false) String status,
+                                                                    Principal principal, @PageableDefault(page = 0, size = 10, sort = "submitTime", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(submissionService.getSubmissionByCondition(principal, contestProblemId, username, status, pageable));
     }
 
     @GetMapping(value = "/sourcecode")
     @PreAuthorize(allAuth)
     public ResponseEntity<GetSubmissionDto> getSourceCode(@Valid @RequestParam(value = "submissionId") Long submissionId, Principal principal) {
-        System.out.println("submissionId = " + submissionId);
         return ResponseEntity.ok(submissionService.getSubmissionWithSourceCode(principal, submissionId));
     }
 

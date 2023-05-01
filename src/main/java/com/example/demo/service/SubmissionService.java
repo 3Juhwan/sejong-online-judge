@@ -10,6 +10,7 @@ import com.example.demo.entity.Submission;
 import com.example.demo.entity.User;
 import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,10 +51,10 @@ public class SubmissionService {
         return submissionRepository.save(submission);
     }
 
-    public List<GetSubmissionDto> getSubmissionByCondition(Principal principal, Long contestProblemId, String username, String status) {
+    public List<GetSubmissionDto> getSubmissionByCondition(Principal principal, Long contestProblemId, String username, String status, Pageable pageable) {
         User user = userRepository.findByUsername(username).orElse(null);
         ContestProblem contestProblem = contestProblemRepository.findById(contestProblemId).orElse(null);
-        return submissionRepository.findAllByConditions(user, contestProblem, status).orElse(null)
+        return submissionRepository.findAllByConditions(user, contestProblem, status, pageable).orElse(null)
                 .stream()
                 .map(submission -> GetSubmissionDto.from(submission, principal, false))
                 .collect(Collectors.toList());
