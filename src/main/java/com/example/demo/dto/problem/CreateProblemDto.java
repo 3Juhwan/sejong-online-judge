@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class CreateProblemDto {
 
+    private Long problemId;
     private String title;
     private String content;
     private Long timeLimit;
@@ -24,6 +25,7 @@ public class CreateProblemDto {
 
     public static CreateProblemDto from(@NotNull Problem problem) {
         return CreateProblemDto.builder()
+                .problemId(problem.getId())
                 .title(problem.getTitle())
                 .content(problem.getContent())
                 .timeLimit(problem.getTimeLimit())
