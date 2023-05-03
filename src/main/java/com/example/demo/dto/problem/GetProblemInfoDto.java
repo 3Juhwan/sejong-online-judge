@@ -25,6 +25,7 @@ public class GetProblemInfoDto {
     public static GetProblemInfoDto from(Problem problem, Boolean isHidden) {
         if (isHidden) {
             return GetProblemInfoDto.builder()
+                    .problemId(problem.getId())
                     .title(problem.getTitle())
                     .content(problem.getContent())
                     .timeLimit(problem.getTimeLimit())
