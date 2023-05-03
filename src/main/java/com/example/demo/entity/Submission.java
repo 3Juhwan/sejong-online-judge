@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import com.example.demo.entity.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -68,8 +67,8 @@ public class Submission {
 
     private Long memoryUsage;
 
-    @Enumerated(EnumType.STRING)
-    private Status status;
+    //    @Enumerated(EnumType.STRING)
+    private Long status;
 
 }
 

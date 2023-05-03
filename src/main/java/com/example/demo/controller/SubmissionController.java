@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.submission.CreateSampleSubmissionDto;
 import com.example.demo.dto.submission.GetSubmissionDto;
+import com.example.demo.dto.submission.SubmissionResponseDto;
 import com.example.demo.service.SubmissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -26,13 +27,13 @@ public class SubmissionController {
 
     @PostMapping("/submission/sample/new")
     @PreAuthorize(allAuth)
-    public ResponseEntity<Object> saveSampleSubmission(@Valid @RequestBody CreateSampleSubmissionDto submissionDto) {
+    public ResponseEntity<List<SubmissionResponseDto>> saveSampleSubmission(@Valid @RequestBody CreateSampleSubmissionDto submissionDto) {
         return ResponseEntity.ok(submissionService.getSampleSubmission(submissionDto));
     }
 
     @PostMapping("/submission/hidden/new")
     @PreAuthorize(allAuth)
-    public ResponseEntity<Object> saveHiddenSubmission(@Valid @RequestBody CreateSampleSubmissionDto submissionDto, Principal principal) {
+    public ResponseEntity<List<SubmissionResponseDto>> saveHiddenSubmission(@Valid @RequestBody CreateSampleSubmissionDto submissionDto, Principal principal) {
         return ResponseEntity.ok(submissionService.getHiddenSubmission(submissionDto, principal));
     }
 

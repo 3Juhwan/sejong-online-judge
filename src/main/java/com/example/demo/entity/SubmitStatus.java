@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import com.example.demo.dto.submitstatus.UpdateSubmitStatusDto;
 import com.example.demo.entity.util.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,9 +43,9 @@ public class SubmitStatus extends BaseTime {
         this.submitCnt = 0L;
     }
 
-    public SubmitStatus updateEntity(UpdateSubmitStatusDto submitStatusDto) {
+    public SubmitStatus updateEntity(Long score) {
         this.submitCnt++;
-        this.highScore = Math.max(this.highScore, submitStatusDto.getScore());
+        this.highScore = Math.max(this.highScore, score);
         return this;
     }
 }
