@@ -15,30 +15,32 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateHiddenSubmissionDto {
+public class RequestCreateSubmissionDto {
     @NotNull
     private Long contestProblemId;
     @NotNull
     private String code;
 
 
-    public static CreateHiddenSubmissionDto from(Submission submission) {
+    public static RequestCreateSubmissionDto from(Submission submission) {
         if (submission == null) {
             return null;
         }
 
-        return CreateHiddenSubmissionDto.builder()
+        return RequestCreateSubmissionDto.builder()
                 .code(submission.getCode())
                 .build();
     }
 
-    public static Submission toEntity(CreateHiddenSubmissionDto submissionDto, User user, ContestProblem contestProblem, Problem problem) {
+    public static Submission toEntity(RequestCreateSubmissionDto submissionDto, User user, ContestProblem contestProblem, Problem problem, Long status, String result) {
         return Submission.builder()
                 .user(user)
                 .problem(problem)
                 .contestProblem(contestProblem)
                 .code(submissionDto.getCode())
                 .length((long) submissionDto.getCode().length())
+                .status(status)
+                .result(result)
                 .build();
     }
 }

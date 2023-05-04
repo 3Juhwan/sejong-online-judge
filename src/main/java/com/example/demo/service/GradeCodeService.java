@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 public class GradeCodeService {
-    public ResponseEntity<Object> gradeSubmission(String sourceCode, List<SampleCase> sampleCaseList) {
+    public List<SubmissionResponseDto> gradeSubmission(String sourceCode, List<SampleCase> sampleCaseList) {
         ResponseEntity<Object> resultMap = new ResponseEntity<>(null, null, 200);
         String url = "http://127.0.0.1:5000/sample";
 
@@ -40,19 +40,18 @@ public class GradeCodeService {
             header.setContentType(MediaType.APPLICATION_JSON);
 
             HttpEntity<?> entity = new HttpEntity<>(body.toString(), header);
-
             List<SubmissionResponseDto> body1 = restTemplate.exchange(url, HttpMethod.POST, entity, new ParameterizedTypeReference<List<SubmissionResponseDto>>() {
             }).getBody();
-            return ResponseEntity.ok(body1);
+            return body1;
 
             //에러처리해야댐
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             System.out.println("error");
             System.out.println(e);
-            return resultMap;
+            return null;
         } catch (Exception e) {
             System.out.println(e);
-            return resultMap;
+            return null;
         }
     }
 }
