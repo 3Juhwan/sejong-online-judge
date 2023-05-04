@@ -10,6 +10,8 @@ import com.example.demo.entity.Submission;
 import com.example.demo.entity.User;
 import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,7 +80,6 @@ public class SubmissionService {
 
         if (submissionResponseDtoList.size() != 0) {
             score = correctCnt / submissionResponseDtoList.size() * 100;
-            System.out.println("score = " + score);
         }
 
         Submission submission = Submission.builder()
@@ -97,13 +98,13 @@ public class SubmissionService {
         return submissionRepository.save(submission);
     }
 
-    public List<GetSubmissionDto> getSubmissionByCondition(Principal principal, Long contestProblemId, String username, String status, Pageable pageable) {
+    public Page<GetSubmissionDto> getSubmissionByCondition(Principal principal, Long contestProblemId, String username, String status, Pageable pageable) {
         User user = userRepository.findByUsername(username).orElse(null);
         ContestProblem contestProblem = contestProblemRepository.findById(contestProblemId).orElse(null);
-        return submissionRepository.findAllByConditions(user, contestProblem, status, pageable).orElse(null)
+        return new PageImpl<>(submissionRepository.findAllByConditions(user, contestProblem, status, pageable).orElse(null)
                 .stream()
                 .map(submission -> GetSubmissionDto.from(submission, principal, false))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     public GetSubmissionDto getSubmissionWithSourceCode(Principal principal, Long submissionId) {
