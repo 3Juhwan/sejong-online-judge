@@ -4,10 +4,7 @@ import com.example.demo.dto.submission.CreateSampleSubmissionDto;
 import com.example.demo.dto.submission.CreateSampleSubmissionDto.SampleCase;
 import com.example.demo.dto.submission.GetSubmissionDto;
 import com.example.demo.dto.submission.SubmissionResponseDto;
-import com.example.demo.entity.ContestProblem;
-import com.example.demo.entity.Problem;
-import com.example.demo.entity.Submission;
-import com.example.demo.entity.User;
+import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,6 +28,7 @@ public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final UserRepository userRepository;
     private final ContestProblemRepository contestProblemRepository;
+    private final ContestRepository contestRepository;
     private final GradeCodeService gradeCodeService;
     private final ProblemRepository problemRepository;
     private final TestDataRepository testDataRepository;
@@ -45,7 +43,7 @@ public class SubmissionService {
     public List<SubmissionResponseDto> getHiddenSubmission(CreateSampleSubmissionDto submissionDto, Principal principal) {
         User user = userRepository.findByUsername(principal.getName()).orElse(null);
         ContestProblem contestProblem = contestProblemRepository.findById(submissionDto.getContestProblemId()).orElse(null);
-        Problem problem = problemRepository.findById(contestProblem.getId()).orElse(null);
+        Problem problem = problemRepository.findById(contestProblem.getProblem().getId()).orElse(null);
         List<SampleCase> sampleCases = testDataRepository.findAllTestDataIdByProblem(problem).orElse(null).stream()
                 .map(x -> SampleCase.builder().dataSequence(x.getDataSequence()).inputData(x.getInputData()).outputData(x.getOutputData()).build()).toList();
         List<SubmissionResponseDto> submissionResponseDtoList = gradeCodeService.gradeSubmission(submissionDto.getSourceCode(), sampleCases);
@@ -100,7 +98,7 @@ public class SubmissionService {
         return submissionRepository.save(submission);
     }
 
-    public Page<GetSubmissionDto> getSubmissionByCondition(Principal principal, Long contestProblemId, String username, String status, Pageable pageable) {
+    public Page<GetSubmissionDto> getSubmissionListByContestProblem(Principal principal, Long contestProblemId, String username, String status, Pageable pageable) {
         User user = userRepository.findByUsername(username).orElse(null);
         ContestProblem contestProblem = contestProblemRepository.findById(contestProblemId).orElse(null);
 
@@ -110,6 +108,30 @@ public class SubmissionService {
         return new PageImpl<>(submissionRepository.findAllByConditions(user, contestProblem, status, pageable).orElse(null).stream()
                 .map(submission -> GetSubmissionDto.from(submission, principal, false))
                 .collect(Collectors.toList()));
+    }
+
+    public Page<GetSubmissionDto> getSubmissionListByContest(Principal principal, Long contestId, String username, String status, Pageable pageable) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null && !username.isEmpty()) {
+            return getEmptyPage();
+        }
+        Contest contest = contestRepository.findById(contestId).orElse(null);
+        if (contest == null) {
+            return getEmptyPage();
+        }
+        List<ContestProblem> contestProblemList = contestProblemRepository.findAllContestProblemByContest(contestId).orElse(null);
+        if (contestProblemList == null) {
+            return getEmptyPage();
+        }
+        return new PageImpl<>(
+                contestProblemList.stream()
+                        .flatMap(contestProblem ->
+                                submissionRepository.findAllByConditions(user, contestProblem, status, pageable).orElse(null).stream()
+                                        .map(submission -> GetSubmissionDto.from(submission, principal, false))
+                        )
+                        .collect(Collectors.toList())
+        );
+
     }
 
     public GetSubmissionDto getSubmissionWithSourceCode(Principal principal, Long submissionId) {
