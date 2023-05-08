@@ -28,7 +28,7 @@ public class GetSubmissionDto {
 
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Boolean owner;
+    private Boolean readable;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String sourceCode;
@@ -50,7 +50,7 @@ public class GetSubmissionDto {
         if (isHidden) {
             return tmp.sourceCode(submission.getCode()).build();
         } else {
-            return tmp.owner(principal.getName().equals(submission.getUser().getUsername())).build();
+            return tmp.readable(principal.getName().equals(submission.getUser().getUsername())).build();
         }
     }
 

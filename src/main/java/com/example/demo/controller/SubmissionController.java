@@ -53,4 +53,10 @@ public class SubmissionController {
         return ResponseEntity.ok(submissionService.getSubmissionWithSourceCode(principal, submissionId));
     }
 
+//    // TODO: 조교/교수/관리자 권한 확인
+//    @GetMapping(value = "/submission", params = "contestProblemId")
+//    public ResponseEntity<Objects> getSubmissionOfAllStudent(@Valid @RequestParam(value = "contestProblemId") Long contestProblemId) {
+//        return ResponseEntity.ok(submissionService);
+//    }
+
 }

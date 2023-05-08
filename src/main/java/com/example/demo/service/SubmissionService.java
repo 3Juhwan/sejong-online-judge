@@ -12,12 +12,14 @@ import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -101,8 +103,11 @@ public class SubmissionService {
     public Page<GetSubmissionDto> getSubmissionByCondition(Principal principal, Long contestProblemId, String username, String status, Pageable pageable) {
         User user = userRepository.findByUsername(username).orElse(null);
         ContestProblem contestProblem = contestProblemRepository.findById(contestProblemId).orElse(null);
-        return new PageImpl<>(submissionRepository.findAllByConditions(user, contestProblem, status, pageable).orElse(null)
-                .stream()
+
+        if (user == null && !username.isEmpty()) {
+            return getEmptyPage();
+        }
+        return new PageImpl<>(submissionRepository.findAllByConditions(user, contestProblem, status, pageable).orElse(null).stream()
                 .map(submission -> GetSubmissionDto.from(submission, principal, false))
                 .collect(Collectors.toList()));
     }
@@ -111,4 +116,10 @@ public class SubmissionService {
         return GetSubmissionDto.from(submissionRepository.findById(submissionId).orElse(null), principal, true);
     }
 
+    // 빈 페이지를 반환하는 예제 메서드
+    public Page<GetSubmissionDto> getEmptyPage() {
+        List<GetSubmissionDto> emptyList = Collections.emptyList();
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        return new PageImpl<>(emptyList, pageRequest, 0);
+    }
 }
