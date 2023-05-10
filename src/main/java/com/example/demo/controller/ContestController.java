@@ -34,9 +34,8 @@ public class ContestController {
 
     @PutMapping("/contest/{contestId}")
     @PreAuthorize(studentExclusiveAuth)
-    public ResponseEntity<Objects> updateContest(@Valid @RequestBody CreateContestDto contestDto, @PathVariable("contestId") Long contestId) {
-        contestService.updateContest(contestDto, contestId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<CreateContestDto> updateContest(@Valid @RequestBody CreateContestDto contestDto, @PathVariable("contestId") Long contestId) {
+        return ResponseEntity.ok(contestService.updateContest(contestDto, contestId));
     }
 
     @GetMapping(value = "/contests", params = {"courseId"})

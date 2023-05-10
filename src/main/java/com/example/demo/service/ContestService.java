@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
@@ -39,9 +38,9 @@ public class ContestService {
         return CreateContestDto.from(savedContest);
     }
 
-    public void updateContest(CreateContestDto contestDto, Long contestId) {
+    public CreateContestDto updateContest(CreateContestDto contestDto, Long contestId) {
         Contest contest = contestRepository.findById(contestId).orElse(null);
-        contestRepository.save(contest.updateEntity(contestDto));
+        return CreateContestDto.from(contest.updateEntity(contestDto));
     }
 
     public void updateContestSequence(UpdateContestSequenceDto contestDto, Long contestId) {
