@@ -31,8 +31,7 @@ public class Submission {
     @JoinColumn(name = "user_id", updatable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-    @JoinColumn(name = "submit_status_id")
+    @OneToOne(mappedBy = "submission")
     private SubmitStatus submitStatus;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
@@ -43,12 +42,13 @@ public class Submission {
     @JoinColumn(name = "problem_id")
     private Problem problem;
 
+
     @NotNull
     private String code;
 
+    // TODO language 관련해서 수정할 거리가 많습니다.
 //    @NotNull
-//    @Enumerated(EnumType.STRING)
-//    private Language language;
+    private String language;
 
     private Long length;
 

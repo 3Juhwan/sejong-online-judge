@@ -43,6 +43,7 @@ public class GetSubmissionDto {
                 .title(submission.getContestProblem().getTitle())
                 .score(submission.getScore())
                 .memoryUsage(submission.getMemoryUsage())
+                .language("python")
                 .timeUsage(submission.getTimeUsage())
                 .length(submission.getLength())
                 .submitTime(submission.getSubmitTime());

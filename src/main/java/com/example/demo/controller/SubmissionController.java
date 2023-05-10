@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.submission.CreateSampleSubmissionDto;
 import com.example.demo.dto.submission.GetSubmissionDto;
+import com.example.demo.dto.submission.GetTotalSubmissionDto;
 import com.example.demo.dto.submission.SubmissionResponseDto;
 import com.example.demo.service.SubmissionService;
 import lombok.RequiredArgsConstructor;
@@ -9,15 +10,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.example.demo.util.AuthUtil.allAuth;
+import static com.example.demo.util.AuthUtil.studentExclusiveAuth;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -39,18 +43,30 @@ public class SubmissionController {
     }
 
     @GetMapping(value = "/submission")
-    @PreAuthorize(allAuth)
-    public ResponseEntity<Page<GetSubmissionDto>> getSubmissionList(@Valid @RequestParam(value = "username", required = false) String username,
-                                                                    @Valid @RequestParam(value = "contestProblemId", required = false) Long contestProblemId,
-                                                                    @Valid @RequestParam(value = "status", required = false) String status,
-                                                                    Principal principal, @PageableDefault(page = 0, size = 10, sort = "submitTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(submissionService.getSubmissionByCondition(principal, contestProblemId, username, status, pageable));
+    @PreAuthorize(studentExclusiveAuth)
+    public ResponseEntity<Page<GetSubmissionDto>> getSubmissionListByContestProblem(@Valid @RequestParam(value = "username", required = false) String username,
+                                                                                    @Valid @RequestParam(value = "contestId", required = false) Long contestId,
+                                                                                    @Valid @RequestParam(value = "contestProblemId", required = false) Long contestProblemId,
+                                                                                    @Valid @RequestParam(value = "status", required = false) String status,
+                                                                                    @PageableDefault(page = 0, size = 10, sort = "submitTime", direction = Sort.Direction.DESC) Pageable pageable,
+                                                                                    Principal principal) {
+        if (contestId == null) {
+            return ResponseEntity.ok(submissionService.getSubmissionListByContestProblem(principal, contestProblemId, username, status, pageable));
+        }
+        return ResponseEntity.ok(submissionService.getSubmissionListByContest(principal, contestId, username, status, pageable));
     }
+
 
     @GetMapping(value = "/sourcecode")
     @PreAuthorize(allAuth)
     public ResponseEntity<GetSubmissionDto> getSourceCode(@Valid @RequestParam(value = "submissionId") Long submissionId, Principal principal) {
         return ResponseEntity.ok(submissionService.getSubmissionWithSourceCode(principal, submissionId));
+    }
+
+    @GetMapping(value = "/submission/total")
+    @PreAuthorize(studentExclusiveAuth)
+    public ResponseEntity<List<GetTotalSubmissionDto>> getTotalStatus(@Valid @RequestParam(value = "contestId") Long contestId, @RequestParam(value = "endingTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endingTime) {
+        return ResponseEntity.ok(submissionService.getTotalStatus(contestId, endingTime));
     }
 
 //    // TODO: 조교/교수/관리자 권한 확인

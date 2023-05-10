@@ -36,6 +36,6 @@ public class ContestProblemService {
     }
 
     public List<GetContestProblemByContestDto> getContestProblemList(Long contestId) {
-        return contestProblemRepository.findAllContestProblemByContest(contestId);
+        return contestProblemRepository.findContestProblemListContest(contestId);
     }
 }

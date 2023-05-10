@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @Entity
@@ -33,8 +32,9 @@ public class SubmitStatus extends BaseTime {
     @JoinColumn(name = "contest_problem_id")
     private ContestProblem contestProblem;
 
-    @OneToMany(mappedBy = "submitStatus")
-    private List<Submission> submissionList;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "submission_id")
+    private Submission submission;
 
     public SubmitStatus(User user, ContestProblem contestProblem) {
         this.user = user;
@@ -43,9 +43,12 @@ public class SubmitStatus extends BaseTime {
         this.submitCnt = 0L;
     }
 
-    public SubmitStatus updateEntity(Long score) {
+    public SubmitStatus updateEntity(Long score, Submission submission) {
         this.submitCnt++;
-        this.highScore = Math.max(this.highScore, score);
+        if (this.highScore <= score) {
+            this.highScore = score;
+            this.submission = submission;
+        }
         return this;
     }
 }

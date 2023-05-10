@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.submission.CreateSampleSubmissionDto;
 import com.example.demo.dto.submission.CreateSampleSubmissionDto.SampleCase;
 import com.example.demo.dto.submission.GetSubmissionDto;
+import com.example.demo.dto.submission.GetTotalSubmissionDto;
 import com.example.demo.dto.submission.SubmissionResponseDto;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +36,8 @@ public class SubmissionService {
     private final TestDataRepository testDataRepository;
     private final SubmitStatusService submitStatusService;
 
+    private final CourseUserRepository courseUserRepository;
+
 
     public List<SubmissionResponseDto> getSampleSubmission(CreateSampleSubmissionDto submissionDto) {
         return gradeCodeService.gradeSubmission(submissionDto.getSourceCode(), submissionDto.getSampleCaseList());
@@ -47,13 +51,12 @@ public class SubmissionService {
         List<SampleCase> sampleCases = testDataRepository.findAllTestDataIdByProblem(problem).orElse(null).stream()
                 .map(x -> SampleCase.builder().dataSequence(x.getDataSequence()).inputData(x.getInputData()).outputData(x.getOutputData()).build()).toList();
         List<SubmissionResponseDto> submissionResponseDtoList = gradeCodeService.gradeSubmission(submissionDto.getSourceCode(), sampleCases);
-        saveSubmission(submissionDto, submissionResponseDtoList, user);
-        submitStatusService.updateSubmitStatus(submissionResponseDtoList, principal, submissionDto.getContestProblemId());
+        Submission submission = saveSubmission(submissionDto, submissionResponseDtoList, user);
+        submitStatusService.updateSubmitStatus(submission, principal, submissionDto.getContestProblemId());
         return submissionResponseDtoList;
     }
 
     public Submission saveSubmission(CreateSampleSubmissionDto submissionDto, List<SubmissionResponseDto> submissionResponseDtoList, User user) {
-
         ContestProblem contestProblem = contestProblemRepository.findById(submissionDto.getContestProblemId()).orElse(null);
 
         Long timeUsage = 0L;
@@ -79,7 +82,7 @@ public class SubmissionService {
         }
 
         if (submissionResponseDtoList.size() != 0) {
-            score = correctCnt / submissionResponseDtoList.size() * 100;
+            score = correctCnt * 100 / submissionResponseDtoList.size();
         }
 
         Submission submission = Submission.builder()
@@ -100,8 +103,8 @@ public class SubmissionService {
 
     public Page<GetSubmissionDto> getSubmissionListByContestProblem(Principal principal, Long contestProblemId, String username, String status, Pageable pageable) {
         User user = userRepository.findByUsername(username).orElse(null);
+        System.out.println("!username.isEmpty() = " + !username.isEmpty());
         ContestProblem contestProblem = contestProblemRepository.findById(contestProblemId).orElse(null);
-
         if (user == null && !username.isEmpty()) {
             return getEmptyPage();
         }
@@ -112,14 +115,16 @@ public class SubmissionService {
 
     public Page<GetSubmissionDto> getSubmissionListByContest(Principal principal, Long contestId, String username, String status, Pageable pageable) {
         User user = userRepository.findByUsername(username).orElse(null);
+        System.out.println("!username.isEmpty() = " + !username.isEmpty());
         if (user == null && !username.isEmpty()) {
             return getEmptyPage();
         }
         Contest contest = contestRepository.findById(contestId).orElse(null);
+        System.out.println("------------------------contestProblemList = " + contest);
         if (contest == null) {
             return getEmptyPage();
         }
-        List<ContestProblem> contestProblemList = contestProblemRepository.findAllContestProblemByContest(contestId).orElse(null);
+        List<ContestProblem> contestProblemList = contestProblemRepository.findAllContestProblemByContestId(contestId).orElse(null);
         if (contestProblemList == null) {
             return getEmptyPage();
         }
@@ -136,6 +141,36 @@ public class SubmissionService {
 
     public GetSubmissionDto getSubmissionWithSourceCode(Principal principal, Long submissionId) {
         return GetSubmissionDto.from(submissionRepository.findById(submissionId).orElse(null), principal, true);
+    }
+
+
+
+    public List<GetTotalSubmissionDto> getTotalStatus(Long contestId, LocalDateTime endingTime) {
+
+        // contest 갖고 오고
+        Contest contest = contestRepository.findById(contestId).orElse(null);
+
+        // course 갖고 오고
+        Course course = contest.getCourse();
+
+        // total user 갖고 오고 (n) 권한 걸러내고
+        List<User> userList = courseUserRepository.findAllByCourse(course).orElse(null).stream()
+                .map(courseUser -> courseUser.getUser())
+                .filter(user -> user.getAuthority().equals(new String("ROLE_STUDENT")))
+                .toList();
+
+        List<ContestProblem> contestProblemList = contestProblemRepository.findAllByContest(contest).orElse(null);
+
+        // 위 정보로 submit-status 다 갖고 오기 (n*m)
+        return userList.stream()
+                .map(user -> {
+                    GetTotalSubmissionDto submissionDto = GetTotalSubmissionDto.builder().username(user.getUsername()).submissionList(new ArrayList<>()).build();
+
+                    contestProblemList.stream()
+                                    .forEach(contestProblem -> submissionDto.addItem(submissionRepository.findBestSubmissionOnTime(user, contestProblem, endingTime).orElse(null)));
+                    return submissionDto;
+                        }
+                ).toList();
     }
 
     // 빈 페이지를 반환하는 예제 메서드
