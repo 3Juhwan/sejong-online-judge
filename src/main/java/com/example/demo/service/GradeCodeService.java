@@ -17,7 +17,7 @@ import java.util.List;
 public class GradeCodeService {
     public List<SubmissionResponseDto> gradeSubmission(String sourceCode, List<SampleCase> sampleCaseList) {
         ResponseEntity<Object> resultMap = new ResponseEntity<>(null, null, 200);
-        String url = "http://127.0.0.1:5000/sample";
+        String url = "http://34.145.13.147:5000/sample";
 
         JSONObject body = new JSONObject();
 
