@@ -46,4 +46,15 @@ public class UserService {
         userRepository.save(user.updateEntity(userDto));
     }
 
+
+    public Boolean checkIfStudent(String username) {
+        User user = userRepository.findOneWithAuthorityByUsername(username).orElse(null);
+        if(user == null || user.getAuthority().equals("ROLE_STUDENT")) {
+            return Boolean.FALSE;
+        }
+        else {
+            return Boolean.TRUE;
+        }
+    }
+
 }

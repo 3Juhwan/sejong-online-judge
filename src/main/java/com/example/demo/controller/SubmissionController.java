@@ -5,6 +5,7 @@ import com.example.demo.dto.submission.GetSubmissionDto;
 import com.example.demo.dto.submission.GetTotalSubmissionDto;
 import com.example.demo.dto.submission.SubmissionResponseDto;
 import com.example.demo.service.SubmissionService;
+import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,7 @@ import static com.example.demo.util.AuthUtil.studentExclusiveAuth;
 public class SubmissionController {
 
     private final SubmissionService submissionService;
+    private final UserService userService;
 
     @PostMapping("/submission/sample/new")
     @PreAuthorize(allAuth)
@@ -43,14 +45,14 @@ public class SubmissionController {
     }
 
     @GetMapping(value = "/submission")
-    @PreAuthorize(studentExclusiveAuth)
+    @PreAuthorize(allAuth)
     public ResponseEntity<Page<GetSubmissionDto>> getSubmissionListByContestProblem(@Valid @RequestParam(value = "username", required = false) String username,
                                                                                     @Valid @RequestParam(value = "contestId", required = false) Long contestId,
                                                                                     @Valid @RequestParam(value = "contestProblemId", required = false) Long contestProblemId,
                                                                                     @Valid @RequestParam(value = "status", required = false) String status,
                                                                                     @PageableDefault(page = 0, size = 10, sort = "submitTime", direction = Sort.Direction.DESC) Pageable pageable,
                                                                                     Principal principal) {
-        if (contestId == null) {
+        if (contestId == null || userService.checkIfStudent(principal.getName())) {
             return ResponseEntity.ok(submissionService.getSubmissionListByContestProblem(principal, contestProblemId, username, status, pageable));
         }
         return ResponseEntity.ok(submissionService.getSubmissionListByContest(principal, contestId, username, status, pageable));
