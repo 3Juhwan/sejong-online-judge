@@ -1,6 +1,5 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.ContestProblem;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.PostBox;
 import com.example.demo.entity.User;
@@ -15,4 +14,5 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     Optional<List<Post>> findAllByPostBoxAndAuthor(PostBox postBox, User user);
+
 }

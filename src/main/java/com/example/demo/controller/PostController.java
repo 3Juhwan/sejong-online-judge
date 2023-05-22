@@ -40,4 +40,10 @@ public class PostController {
     public ResponseEntity<List<PostResponseDto>> getPostByPostBox(@Valid @RequestParam Long postBoxId, Principal principal) {
         return ResponseEntity.ok(postService.getPostByPostBox(postBoxId, principal));
     }
+
+    @GetMapping(params = "contestProblemId")
+    @PreAuthorize(allAuth)
+    public ResponseEntity<List<PostResponseDto>> getPostByContestProblem(@Valid @RequestParam Long contestProblemId, Principal principal) {
+        return ResponseEntity.ok(postService.getPostByContestProblem(contestProblemId, principal));
+    }
 }

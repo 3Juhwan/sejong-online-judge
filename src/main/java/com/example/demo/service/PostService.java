@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.UpdatePostRequestDto;
 import com.example.demo.dto.postBox.CreatePostRequestDto;
 import com.example.demo.dto.postBox.PostResponseDto;
+import com.example.demo.entity.ContestProblem;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.PostBox;
 import com.example.demo.entity.User;
@@ -70,7 +71,29 @@ public class PostService {
         }
         User user = userOptional.get();
         return postRepository.findAllByPostBoxAndAuthor(postBox, user).orElse(null).stream()
-                .map(p -> PostResponseDto.from(p))
+                .map(PostResponseDto::from)
+                .toList();
+    }
+
+
+    public List<PostResponseDto> getPostByContestProblem(Long contestProblemId, Principal principal) {
+        Optional<User> userOptional = userRepository.findByUsername(principal.getName());
+        if (userOptional.isEmpty()) {
+            System.out.println("user가 없습니다. ");
+        }
+        User user = userOptional.get();
+        Optional<ContestProblem> contestProblemOptional = contestProblemRepository.findById(contestProblemId);
+        if(contestProblemOptional.isEmpty()){
+            System.out.println("contestProblem가 없습니다. ");
+        }
+        ContestProblem contestProblem = contestProblemOptional.get();
+        Optional<PostBox> postBoxOptional = postBoxRepository.findByContestProblemAndUser(contestProblem, user);
+        if(postBoxOptional.isEmpty()) {
+            System.out.println("postBox가 없습니다. ");
+        }
+        PostBox postBox = postBoxOptional.get();
+        return postRepository.findAllByPostBoxAndAuthor(postBox, user).orElse(null).stream()
+                .map(PostResponseDto::from)
                 .toList();
     }
 
