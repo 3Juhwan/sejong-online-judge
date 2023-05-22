@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import reactor.util.annotation.Nullable;
 
 import javax.persistence.*;
 import java.util.List;
@@ -42,11 +43,20 @@ public class PostBox extends BaseTime {
     @OneToMany(mappedBy = "postBox", fetch = FetchType.LAZY)
     private List<Post> postList;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post lastPost;
+
     private Boolean finished;
 
     @PrePersist
     public void init() {
         this.finished = Boolean.FALSE;
+        this.lastPost = null;
+    }
+
+    public void update(Post post) {
+        this.lastPost = post;
     }
 
 }

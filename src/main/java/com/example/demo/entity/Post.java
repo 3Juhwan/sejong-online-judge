@@ -32,4 +32,13 @@ public class Post extends BaseTime {
 
     private String sourceCode;
 
+    public void update(String content, String sourceCode) {
+        if(content != null) {
+            this.content = content;
+        }
+        if(sourceCode != null) {
+            this.sourceCode = sourceCode;
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.UpdatePostRequestDto;
 import com.example.demo.dto.postBox.CreatePostRequestDto;
 import com.example.demo.dto.postBox.PostResponseDto;
 import com.example.demo.service.PostService;
@@ -30,8 +31,8 @@ public class PostController {
     // TODO 수정을 요청한 Post가 본인 소유인지 확인
     @PutMapping
     @PreAuthorize(allAuth)
-    public ResponseEntity<PostResponseDto> updatePost(@RequestBody CreatePostRequestDto requestDto, Principal principal) {
-        return ResponseEntity.ok(postService.savePost(requestDto, principal));
+    public ResponseEntity<PostResponseDto> updatePost(@RequestBody UpdatePostRequestDto requestDto, Principal principal) {
+        return ResponseEntity.ok(postService.updatePost(requestDto, principal));
     }
 
     @GetMapping(params = "postBoxId")

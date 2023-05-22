@@ -17,6 +17,7 @@ public class PostBoxResponseDto {
     private String courseName;
     private String contestName;
     private String contestProblemName;
+    private String coverContent;
     private Boolean finished;
     private LocalDateTime modifiedTime;
 
@@ -27,6 +28,7 @@ public class PostBoxResponseDto {
                 .courseName(postBox.getCourse().getTitle())
                 .contestName(postBox.getContest().getTitle())
                 .contestProblemName(postBox.getContestProblem().getTitle())
+                .coverContent(postBox.getLastPost().getContent())
                 .finished(postBox.getFinished())
                 .modifiedTime(postBox.getModifiedTime())
                 .build();

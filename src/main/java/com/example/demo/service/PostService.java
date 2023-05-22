@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.UpdatePostRequestDto;
 import com.example.demo.dto.postBox.CreatePostRequestDto;
 import com.example.demo.dto.postBox.PostResponseDto;
 import com.example.demo.entity.Post;
@@ -36,8 +37,25 @@ public class PostService {
             System.out.println("postbox가 없습니다. ");
         }
         PostBox postBox = postBoxOptional.get();
-        Post post = CreatePostRequestDto.toEntity(requestDto, user, postBox);
+        Post post = postRepository.save(CreatePostRequestDto.toEntity(requestDto, user, postBox));
+        postBox.update(post);
+        postBoxRepository.save(postBox);
         return PostResponseDto.from(post);
+    }
+
+    public PostResponseDto updatePost(UpdatePostRequestDto requestDto, Principal principal) {
+        Optional<User> userOptional = userRepository.findByUsername(principal.getName());
+        if (userOptional.isEmpty()) {
+            System.out.println("user가 없습니다. ");
+        }
+        User user = userOptional.get();
+        Optional<Post> postOptional = postRepository.findById(requestDto.getPostId());
+        if (postOptional.isEmpty()) {
+            System.out.println("post가 없습니다. ");
+        }
+        Post post = postOptional.get();
+        post.update(requestDto.getContent(), requestDto.getSourceCode());
+        return PostResponseDto.from(postRepository.save(post));
     }
 
     public List<PostResponseDto> getPostByPostBox(Long postBoxId, Principal principal) {
