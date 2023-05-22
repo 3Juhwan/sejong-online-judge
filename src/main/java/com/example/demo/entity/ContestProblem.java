@@ -37,6 +37,9 @@ public class ContestProblem extends BaseTime {
     @OneToMany(mappedBy = "contestProblem")
     private List<SubmitStatus> submitStatuses;
 
+    @OneToMany(mappedBy = "contestProblem", cascade = CascadeType.ALL)
+    private List<PostBox> postList;
+
     public static ContestProblem toEntity(ProblemInfo problemInfo, Problem problem, Contest contest) {
         return ContestProblem.builder()
                 .title(problemInfo.getTitle())

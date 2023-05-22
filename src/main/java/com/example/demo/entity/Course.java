@@ -32,13 +32,16 @@ public class Course extends BaseTime {
 
     private Long linkedCourseId;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private List<PostBox> postList;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Contest> contests;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<CourseUser> courseUser;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
     private User creator;
 

@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface SubmissionRepository extends JpaRepository<Submission, Long> {
 
-    @Query("SELECT s FROM Submission s WHERE (:user IS NULL OR s.user = :user) AND (:contestProblem IS NULL OR s.contestProblem = :contestProblem) AND (:status IS NULL OR s.status = :status)")
+    @Query("SELECT s FROM Submission s WHERE (:user IS NULL OR s.user = :user) AND (:contestProblem IS NULL OR s.contestProblem = :contestProblem) AND (:status IS NULL OR s.status = :status) order by s.submitTime desc")
     Optional<Page<Submission>> findAllByConditions(@Param("user") User user, @Param("contestProblem") ContestProblem contestProblem, @Param("status") String status, Pageable pageable);
 
     @Query("SELECT s FROM Submission s WHERE s.user = :user " +

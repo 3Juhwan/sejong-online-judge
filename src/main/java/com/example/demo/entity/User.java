@@ -48,17 +48,23 @@ public class User extends BaseTime {
     @NotNull
     private boolean activated;
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     private List<Problem> problemsList;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<CourseUser> courseUser;
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     private List<Course> createdCourses;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Submission> submissionList;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<PostBox> postBoxList;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    private List<Post> postList;
 
 
     public static User toEntity(CreateUserDto userDto, String password) {

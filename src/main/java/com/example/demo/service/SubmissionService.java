@@ -165,7 +165,6 @@ public class SubmissionService {
         return userList.stream()
                 .map(user -> {
                     GetTotalSubmissionDto submissionDto = GetTotalSubmissionDto.builder().username(user.getUsername()).submissionList(new ArrayList<>()).build();
-
                     contestProblemList.stream()
                                     .forEach(contestProblem -> submissionDto.addItem(submissionRepository.findBestSubmissionOnTime(user, contestProblem, endingTime).orElse(null)));
                     return submissionDto;
