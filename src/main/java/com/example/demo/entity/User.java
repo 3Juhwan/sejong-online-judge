@@ -30,7 +30,7 @@ public class User extends BaseTime {
 
     @NotNull
     @Column(unique = true, updatable = false)
-    @Pattern(regexp = "^[a-z0-9]{5,10}$")
+    @Pattern(regexp = "^[A-Za-z0-9]{5,10}$")
     @Size(min = 5, max = 10)
     private String username;
 
