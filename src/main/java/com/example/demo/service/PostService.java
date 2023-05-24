@@ -70,7 +70,7 @@ public class PostService {
             System.out.println("User가 없습니다. ");
         }
         User user = userOptional.get();
-        return postRepository.findAllByPostBoxAndAuthor(postBox, user).orElse(null).stream()
+        return postRepository.findAllByPostBox(postBox).orElse(null).stream()
                 .map(PostResponseDto::from)
                 .toList();
     }
@@ -92,7 +92,7 @@ public class PostService {
             System.out.println("postBox가 없습니다. ");
         }
         PostBox postBox = postBoxOptional.get();
-        return postRepository.findAllByPostBoxAndAuthor(postBox, user).orElse(null).stream()
+        return postRepository.findAllByPostBox(postBox).orElse(null).stream()
                 .map(PostResponseDto::from)
                 .toList();
     }
