@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import reactor.util.annotation.Nullable;
 
 import javax.persistence.*;
 import java.util.List;
