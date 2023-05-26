@@ -50,10 +50,10 @@ public class UserService {
     public Boolean checkIfStudent(String username) {
         User user = userRepository.findOneWithAuthorityByUsername(username).orElse(null);
         if(user == null || user.getAuthority().equals("ROLE_STUDENT")) {
-            return Boolean.FALSE;
+            return Boolean.TRUE;
         }
         else {
-            return Boolean.TRUE;
+            return Boolean.FALSE;
         }
     }
 
