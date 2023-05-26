@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.submission.CreateSampleSubmissionDto;
+import com.example.demo.dto.submission.*;
 import com.example.demo.dto.submission.CreateSampleSubmissionDto.SampleCase;
-import com.example.demo.dto.submission.GetSubmissionDto;
-import com.example.demo.dto.submission.GetTotalSubmissionDto;
-import com.example.demo.dto.submission.SubmissionResponseDto;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +33,6 @@ public class SubmissionService {
     private final ProblemRepository problemRepository;
     private final TestDataRepository testDataRepository;
     private final SubmitStatusService submitStatusService;
-
     private final CourseUserRepository courseUserRepository;
 
 
@@ -143,8 +140,6 @@ public class SubmissionService {
         return GetSubmissionDto.from(submissionRepository.findById(submissionId).orElse(null), principal, true);
     }
 
-
-
     public List<GetTotalSubmissionDto> getTotalStatus(Long contestId, LocalDateTime endingTime) {
 
         // contest 갖고 오고
@@ -164,10 +159,10 @@ public class SubmissionService {
         // 위 정보로 submit-status 다 갖고 오기 (n*m)
         return userList.stream()
                 .map(user -> {
-                    GetTotalSubmissionDto submissionDto = GetTotalSubmissionDto.builder().username(user.getUsername()).submissionList(new ArrayList<>()).build();
-                    contestProblemList.stream()
+                            GetTotalSubmissionDto submissionDto = GetTotalSubmissionDto.builder().username(user.getUsername()).submissionList(new ArrayList<>()).build();
+                            contestProblemList.stream()
                                     .forEach(contestProblem -> submissionDto.addItem(submissionRepository.findBestSubmissionOnTime(user, contestProblem, endingTime).orElse(null)));
-                    return submissionDto;
+                            return submissionDto;
                         }
                 ).toList();
     }
@@ -178,4 +173,47 @@ public class SubmissionService {
         PageRequest pageRequest = PageRequest.of(0, 10);
         return new PageImpl<>(emptyList, pageRequest, 0);
     }
+
+    public List<GetGradedScoreBoardResponseDto> getGradedScoreBoard(Long contestId, LocalDateTime endingTime) {
+
+        // contest 갖고 오고
+        Contest contest = contestRepository.findById(contestId).orElse(null);
+
+        // course 갖고 오고
+        Course course = contest.getCourse();
+
+        // total user 갖고 오고 (n) 권한 걸러내고
+        List<User> userList = courseUserRepository.findAllByCourse(course).orElse(null).stream()
+                .map(courseUser -> courseUser.getUser())
+                .filter(user -> user.getAuthority().equals(new String("ROLE_STUDENT")))
+                .toList();
+
+        List<ContestProblem> contestProblemList = contestProblemRepository.findAllByContest(contest).orElse(null);
+
+        // 위 정보로 submit-status 다 갖고 오기 (n*m)
+        return userList.stream()
+                .map(user -> {
+                            GetGradedScoreBoardResponseDto submissionDto = GetGradedScoreBoardResponseDto.builder().username(user.getUsername()).submissionList(new ArrayList<>()).build();
+                            contestProblemList.stream()
+                                    .forEach(contestProblem -> submissionDto.addItem(submissionRepository.findBestSubmissionOnTime(user, contestProblem, endingTime).orElse(null)));
+                            return submissionDto;
+                        }
+                ).toList();
+    }
+
+    @Transactional
+    public void saveGradedScore(List<PostGradedScoreRequestDto> requestDtoList) {
+        for (PostGradedScoreRequestDto requestDto : requestDtoList) {
+            Optional<Submission> submissionOptional = submissionRepository.findById(requestDto.getSubmissionId());
+            if (!submissionOptional.isPresent()) {
+                System.out.println("Submission이 없습니다. ");
+                continue;
+            }
+            Submission submission = submissionOptional.get();
+            System.out.println("requestDto.getComment() = " + requestDto.getComment());
+            submission.updateGradedScore(requestDto.getGradedScore(), requestDto.getComment());
+            submissionRepository.save(submission);
+        }
+    }
+
 }

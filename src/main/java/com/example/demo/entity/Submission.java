@@ -58,6 +58,10 @@ public class Submission {
 
     private Long score;
 
+    private Long gradedScore;
+
+    private String comment;
+
     @Column(length = 10000)
     private String result;
 
@@ -69,6 +73,11 @@ public class Submission {
 
     //    @Enumerated(EnumType.STRING)
     private Long status;
+
+    public void updateGradedScore(Long score, String comment) {
+        this.gradedScore = score;
+        this.comment = comment;
+    }
 
 }
 
