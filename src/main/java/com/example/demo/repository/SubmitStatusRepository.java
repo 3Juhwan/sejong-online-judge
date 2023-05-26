@@ -16,7 +16,7 @@ public interface SubmitStatusRepository extends JpaRepository<SubmitStatus, Long
 
     Optional<SubmitStatus> findByUserAndContestProblem(User user, ContestProblem contestProblem);
 
-    @Query("select ss.highScore as highScore, ss.submitCnt as submitCnt from SubmitStatus ss where ss.user.username = :username and ss.contestProblem.id = :contestProblemId")
-    Optional<GetSubmitStatusByUserDto> findByUserAndContestProblem(@Param("username") String username, @Param("contestProblemId") Long contestProblemId);
+    @Query("select ss from SubmitStatus ss where ss.user.username = :username and ss.contestProblem.id = :contestProblemId")
+    Optional<SubmitStatus> findByUserAndContestProblem(@Param("username") String username, @Param("contestProblemId") Long contestProblemId);
 
 }

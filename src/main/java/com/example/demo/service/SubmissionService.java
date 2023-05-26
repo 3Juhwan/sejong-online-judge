@@ -100,11 +100,10 @@ public class SubmissionService {
 
     public Page<GetSubmissionDto> getSubmissionListByContestProblem(Principal principal, Long contestProblemId, String username, String status, Pageable pageable) {
         User user = userRepository.findByUsername(username).orElse(null);
-        System.out.println("!username.isEmpty() = " + !username.isEmpty());
-        ContestProblem contestProblem = contestProblemRepository.findById(contestProblemId).orElse(null);
         if (user == null && !username.isEmpty()) {
             return getEmptyPage();
         }
+        ContestProblem contestProblem = contestProblemRepository.findById(contestProblemId).orElse(null);
         return new PageImpl<>(submissionRepository.findAllByConditions(user, contestProblem, status, pageable).orElse(null).stream()
                 .map(submission -> GetSubmissionDto.from(submission, principal, false))
                 .collect(Collectors.toList()));
@@ -112,12 +111,10 @@ public class SubmissionService {
 
     public Page<GetSubmissionDto> getSubmissionListByContest(Principal principal, Long contestId, String username, String status, Pageable pageable) {
         User user = userRepository.findByUsername(username).orElse(null);
-        System.out.println("!username.isEmpty() = " + !username.isEmpty());
         if (user == null && !username.isEmpty()) {
             return getEmptyPage();
         }
         Contest contest = contestRepository.findById(contestId).orElse(null);
-        System.out.println("------------------------contestProblemList = " + contest);
         if (contest == null) {
             return getEmptyPage();
         }

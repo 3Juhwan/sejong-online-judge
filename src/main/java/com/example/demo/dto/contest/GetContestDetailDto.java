@@ -1,7 +1,7 @@
 package com.example.demo.dto.contest;
 
 import com.example.demo.dto.contestProblem.GetContestProblemByContestDto;
-import com.example.demo.dto.submitstatus.GetSubmitStatusByUserDto;
+import com.example.demo.entity.SubmitStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,14 +21,14 @@ public class GetContestDetailDto {
     LocalDateTime endingTime;
     List<ContestProblemDto> contestProblemDtoList;
 
-    public void from(GetContestProblemByContestDto contestProblemDto, GetSubmitStatusByUserDto submitStatusDto) {
+    public void from(GetContestProblemByContestDto contestProblemDto, SubmitStatus submitStatus) {
         ContestProblemDto contestProblem = ContestProblemDto.builder()
                 .title(contestProblemDto.getTitle())
                 .sequence(contestProblemDto.getSequence())
                 .problemId(contestProblemDto.getProblemId())
                 .contestProblemId(contestProblemDto.getContestProblemId())
-                .highScore(submitStatusDto.getHighScore())
-                .submitCnt(submitStatusDto.getSubmitCnt())
+                .highScore(submitStatus.getHighScore())
+                .submitCnt(submitStatus.getSubmitCnt())
                 .build();
         this.contestProblemDtoList.add(contestProblem);
     }

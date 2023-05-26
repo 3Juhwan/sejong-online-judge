@@ -5,7 +5,6 @@ import com.example.demo.dto.contest.GetContestByCourseDto;
 import com.example.demo.dto.contest.GetContestDetailDto;
 import com.example.demo.dto.contest.UpdateContestSequenceDto;
 import com.example.demo.dto.contestProblem.GetContestProblemByContestDto;
-import com.example.demo.dto.submitstatus.GetSubmitStatusByUserDto;
 import com.example.demo.entity.Contest;
 import com.example.demo.entity.Course;
 import com.example.demo.entity.SubmitStatus;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Service
@@ -62,14 +62,15 @@ public class ContestService {
 
         List<GetContestProblemByContestDto> contestProblemList = contestProblemService.getContestProblemList(contestId);
 
-        List<GetSubmitStatusByUserDto> submitStatuseList = contestProblemList.stream()
+        List<SubmitStatus> submitStatuseList = contestProblemList.stream()
                 .map(contestProblem -> {
-                    GetSubmitStatusByUserDto getSubmitStatusByUserDto = submitStatusRepository.findByUserAndContestProblem(username, contestProblem.getContestProblemId()).orElse(null);
-                    if (getSubmitStatusByUserDto == null) {
+                    Optional<SubmitStatus> submitStatusOptional = submitStatusRepository.findByUserAndContestProblem(username, contestProblem.getContestProblemId());
+                    if (submitStatusOptional.isEmpty()) {
                         SubmitStatus submitStatus = new SubmitStatus(userRepository.findByUsername(username).orElse(null), contestProblemRepository.findById(contestProblem.getContestProblemId()).orElse(null));
-                        submitStatusRepository.save(submitStatus);
+                        return submitStatusRepository.save(submitStatus);
+                    } else {
+                        return submitStatusOptional.get();
                     }
-                    return submitStatusRepository.findByUserAndContestProblem(username, contestProblem.getContestProblemId()).orElse(null);
                 })
                 .toList();
 
