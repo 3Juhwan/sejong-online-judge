@@ -38,7 +38,8 @@ public class CourseService {
     }
 
     public GetCourseDto getCourse(Long courseId) {
-        return courseRepository.findCourseByCourseId(courseId).orElse(null);
+        Course course = courseRepository.findById(courseId).get();
+        return GetCourseDto.from(course, course.getLanguage());
     }
 
     public List<FindCourseDto> getCourses(Principal principal) {

@@ -1,21 +1,47 @@
 package com.example.demo.dto.course;
 
-public interface GetCourseDto {
-    Long getCourseId();
+import com.example.demo.entity.Course;
+import com.example.demo.entity.Language;
+import lombok.*;
 
-    String getTitle();
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class GetCourseDto {
+    private Long courseId;
+    private String title;
+    private String semester;
+    private LanguageDto language;
 
-    String getSemester();
+    public static GetCourseDto from(Course course, Language language) {
+        return GetCourseDto.builder()
+                .courseId(course.getId())
+                .title(course.getTitle())
+                .semester(course.getSemester())
+                .language(LanguageDto.from(language))
+                .build();
+    }
 
-    Language getLanguage();
+    @Getter
+    @Setter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    static class LanguageDto {
+        private Boolean python;
+        private Boolean c;
+        private Boolean cpp;
+        private Boolean java;
 
-    interface Language {
-        Boolean getPython();
-
-        Boolean getC();
-
-        Boolean getCpp();
-
-        Boolean getJava();
+        public static LanguageDto from(Language language) {
+            return LanguageDto.builder()
+                    .c(language.getC())
+                    .cpp(language.getCpp())
+                    .python(language.getPython())
+                    .java(language.getJava())
+                    .build();
+        }
     }
 }
