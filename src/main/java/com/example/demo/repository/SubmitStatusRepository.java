@@ -1,6 +1,5 @@
 package com.example.demo.repository;
 
-import com.example.demo.dto.submitstatus.GetSubmitStatusByUserDto;
 import com.example.demo.entity.ContestProblem;
 import com.example.demo.entity.SubmitStatus;
 import com.example.demo.entity.User;

@@ -47,8 +47,8 @@ public class GradeController {
 
     @PutMapping(value = "")
     @PreAuthorize(studentExclusiveAuth)
-    public ResponseEntity<Objects> saveGradedScore(@Valid @RequestBody List<PostGradedScoreRequestDto> requestDtoList) {
-        submissionService.saveGradedScore(requestDtoList);
+    public ResponseEntity<Objects> saveGradedScore(@Valid @RequestBody PostGradedScoreRequestDto requestDto) {
+        submissionService.saveGradedScore(requestDto);
         return ResponseEntity.noContent().build();
     }
 }

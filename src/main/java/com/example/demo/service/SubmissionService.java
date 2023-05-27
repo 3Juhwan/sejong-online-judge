@@ -208,18 +208,16 @@ public class SubmissionService {
     }
 
     @Transactional
-    public void saveGradedScore(List<PostGradedScoreRequestDto> requestDtoList) {
-        for (PostGradedScoreRequestDto requestDto : requestDtoList) {
-            Optional<Submission> submissionOptional = submissionRepository.findById(requestDto.getSubmissionId());
-            if (submissionOptional.isEmpty()) {
-                System.out.println("Submission이 없습니다. ");
-                continue;
-            }
-            Submission submission = submissionOptional.get();
-            System.out.println("requestDto.getComment() = " + requestDto.getComment());
-            submission.updateGradedScore(requestDto.getGradedScore(), requestDto.getComment());
-            submissionRepository.save(submission);
+    public void saveGradedScore(PostGradedScoreRequestDto requestDto) {
+        Optional<Submission> submissionOptional = submissionRepository.findById(requestDto.getSubmissionId());
+        if (submissionOptional.isEmpty()) {
+            System.out.println("Submission이 없습니다. ");
+            return;
         }
+        Submission submission = submissionOptional.get();
+        System.out.println("requestDto.getComment() = " + requestDto.getComment());
+        submission.updateGradedScore(requestDto.getGradedScore(), requestDto.getComment());
+        submissionRepository.save(submission);
     }
 
 }
