@@ -36,6 +36,9 @@ public class Contest extends BaseTime {
     @OneToMany(mappedBy = "contest", cascade = CascadeType.ALL)
     private List<PostBox> postList;
 
+    @OneToMany(mappedBy = "contest", cascade = CascadeType.ALL)
+    private List<Grade> gradeList;
+
     private Long sequence;
 
     private LocalDateTime startingTime;

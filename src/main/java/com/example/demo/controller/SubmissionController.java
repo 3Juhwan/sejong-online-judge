@@ -1,6 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.submission.*;
+import com.example.demo.dto.submission.CreateSampleSubmissionDto;
+import com.example.demo.dto.submission.GetSubmissionDto;
+import com.example.demo.dto.submission.GetTotalSubmissionDto;
+import com.example.demo.dto.submission.SubmissionResponseDto;
 import com.example.demo.service.SubmissionService;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +20,6 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 import static com.example.demo.util.AuthUtil.allAuth;
 import static com.example.demo.util.AuthUtil.studentExclusiveAuth;
@@ -67,19 +69,6 @@ public class SubmissionController {
     @PreAuthorize(studentExclusiveAuth)
     public ResponseEntity<List<GetTotalSubmissionDto>> getTotalStatus(@Valid @RequestParam(value = "contestId") Long contestId, @RequestParam(value = "endingTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endingTime) {
         return ResponseEntity.ok(submissionService.getTotalStatus(contestId, endingTime));
-    }
-
-    @GetMapping(value = "/submission/graded")
-    @PreAuthorize(studentExclusiveAuth)
-    public ResponseEntity<List<GetGradedScoreBoardResponseDto>> getGradedScoreBoard(@Valid @RequestParam(value = "contestId") Long contestId, @RequestParam(value = "endingTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endingTime) {
-        return ResponseEntity.ok(submissionService.getGradedScoreBoard(contestId, endingTime));
-    }
-
-    @PostMapping(value = "/submission/graded")
-    @PreAuthorize(studentExclusiveAuth)
-    public ResponseEntity<Objects> saveGradedScore(@Valid @RequestBody List<PostGradedScoreRequestDto> requestDtoList) {
-        submissionService.saveGradedScore(requestDtoList);
-        return ResponseEntity.noContent().build();
     }
 
 //    // TODO: 조교/교수/관리자 권한 확인

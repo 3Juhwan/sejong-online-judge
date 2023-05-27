@@ -1,4 +1,4 @@
-package com.example.demo.dto.submission;
+package com.example.demo.dto.grade;
 
 import com.example.demo.entity.Submission;
 import lombok.*;
@@ -29,16 +29,18 @@ public class GetGradedScoreBoardResponseDto {
         private Long submissionId;
         private Long score;
         private Long gradedScore;
+        private String comment;
 
         public static GetGradedScoreBoardResponseDto.submissionDto from(Submission submission) {
             if (submission == null) {
                 return new GetGradedScoreBoardResponseDto.submissionDto();
             }
-            return GetGradedScoreBoardResponseDto.submissionDto.builder()
+            return submissionDto.builder()
                     .submissionId(submission.getId())
                     .score(submission.getScore())
                     .contestProblemId(submission.getContestProblem().getId())
                     .gradedScore(submission.getGradedScore())
+                    .comment(submission.getComment())
                     .build();
         }
     }

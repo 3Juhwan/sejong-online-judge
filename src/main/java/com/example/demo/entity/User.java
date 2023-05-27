@@ -67,6 +67,10 @@ public class User extends BaseTime {
     private List<Post> postList;
 
 
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    private List<Grade> gradeList;
+
+
     public static User toEntity(CreateUserDto userDto, String password) {
         return User.builder()
                 .username(userDto.getUsername())

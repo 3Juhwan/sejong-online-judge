@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.grade.GetGradedScoreBoardResponseDto;
 import com.example.demo.dto.submission.*;
 import com.example.demo.dto.submission.CreateSampleSubmissionDto.SampleCase;
 import com.example.demo.entity.*;
@@ -34,6 +35,7 @@ public class SubmissionService {
     private final TestDataRepository testDataRepository;
     private final SubmitStatusService submitStatusService;
     private final CourseUserRepository courseUserRepository;
+    private final GradeRepository gradeRepository;
 
 
     public List<SubmissionResponseDto> getSampleSubmission(CreateSampleSubmissionDto submissionDto) {
@@ -85,7 +87,7 @@ public class SubmissionService {
         Submission submission = Submission.builder()
                 .code(submissionDto.getSourceCode())
                 .result(String.join("\n\n--------------------\n\n", resultList))
-                .length(Long.valueOf(submissionDto.getSourceCode().length()))
+                .length((long) submissionDto.getSourceCode().length())
                 .problem(contestProblem.getProblem())
                 .contestProblem(contestProblem)
                 .user(user)
@@ -147,8 +149,8 @@ public class SubmissionService {
 
         // total user 갖고 오고 (n) 권한 걸러내고
         List<User> userList = courseUserRepository.findAllByCourse(course).orElse(null).stream()
-                .map(courseUser -> courseUser.getUser())
-                .filter(user -> user.getAuthority().equals(new String("ROLE_STUDENT")))
+                .map(CourseUser::getUser)
+                .filter(user -> user.getAuthority().equals("ROLE_STUDENT"))
                 .toList();
 
         List<ContestProblem> contestProblemList = contestProblemRepository.findAllByContest(contest).orElse(null);
@@ -157,7 +159,7 @@ public class SubmissionService {
         return userList.stream()
                 .map(user -> {
                             GetTotalSubmissionDto submissionDto = GetTotalSubmissionDto.builder().username(user.getUsername()).submissionList(new ArrayList<>()).build();
-                            contestProblemList.stream()
+                            contestProblemList
                                     .forEach(contestProblem -> submissionDto.addItem(submissionRepository.findBestSubmissionOnTime(user, contestProblem, endingTime).orElse(null)));
                             return submissionDto;
                         }
@@ -171,18 +173,25 @@ public class SubmissionService {
         return new PageImpl<>(emptyList, pageRequest, 0);
     }
 
-    public List<GetGradedScoreBoardResponseDto> getGradedScoreBoard(Long contestId, LocalDateTime endingTime) {
+    public List<GetGradedScoreBoardResponseDto> getGradedScoreBoard(Long gradeId) {
+
+        Optional<Grade> gradeOptional = gradeRepository.findById(gradeId);
+        if(gradeOptional.isEmpty()) {
+            System.out.println("grade가 없습니다. ");
+            return null;
+        }
+        Grade grade = gradeOptional.get();
 
         // contest 갖고 오고
-        Contest contest = contestRepository.findById(contestId).orElse(null);
+        Contest contest = contestRepository.findById(grade.getContest().getId()).orElse(null);
 
         // course 갖고 오고
         Course course = contest.getCourse();
 
         // total user 갖고 오고 (n) 권한 걸러내고
         List<User> userList = courseUserRepository.findAllByCourse(course).orElse(null).stream()
-                .map(courseUser -> courseUser.getUser())
-                .filter(user -> user.getAuthority().equals(new String("ROLE_STUDENT")))
+                .map(CourseUser::getUser)
+                .filter(user -> user.getAuthority().equals("ROLE_STUDENT"))
                 .toList();
 
         List<ContestProblem> contestProblemList = contestProblemRepository.findAllByContest(contest).orElse(null);
@@ -191,8 +200,8 @@ public class SubmissionService {
         return userList.stream()
                 .map(user -> {
                             GetGradedScoreBoardResponseDto submissionDto = GetGradedScoreBoardResponseDto.builder().username(user.getUsername()).submissionList(new ArrayList<>()).build();
-                            contestProblemList.stream()
-                                    .forEach(contestProblem -> submissionDto.addItem(submissionRepository.findBestSubmissionOnTime(user, contestProblem, endingTime).orElse(null)));
+                            contestProblemList
+                                    .forEach(contestProblem -> submissionDto.addItem(submissionRepository.findBestSubmissionOnTime(user, contestProblem, grade.getReferenceTime()).orElse(null)));
                             return submissionDto;
                         }
                 ).toList();
@@ -202,7 +211,7 @@ public class SubmissionService {
     public void saveGradedScore(List<PostGradedScoreRequestDto> requestDtoList) {
         for (PostGradedScoreRequestDto requestDto : requestDtoList) {
             Optional<Submission> submissionOptional = submissionRepository.findById(requestDto.getSubmissionId());
-            if (!submissionOptional.isPresent()) {
+            if (submissionOptional.isEmpty()) {
                 System.out.println("Submission이 없습니다. ");
                 continue;
             }
