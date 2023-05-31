@@ -38,4 +38,8 @@ public class ContestProblemService {
     public List<GetContestProblemByContestDto> getContestProblemList(Long contestId) {
         return contestProblemRepository.findContestProblemListContest(contestId);
     }
+
+    public void deleteContestProblem(Long contestProblemId) {
+        contestProblemRepository.deleteById(contestProblemId);
+    }
 }
