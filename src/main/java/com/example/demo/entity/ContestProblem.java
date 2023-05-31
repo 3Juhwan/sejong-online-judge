@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import com.example.demo.dto.contestProblem.SaveContestProblemDto.ProblemInfo;
+import com.example.demo.dto.contestProblem.SaveContestProblemDto;
 import com.example.demo.entity.util.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,12 +40,19 @@ public class ContestProblem extends BaseTime {
     @OneToMany(mappedBy = "contestProblem", cascade = CascadeType.ALL)
     private List<PostBox> postList;
 
-    public static ContestProblem toEntity(ProblemInfo problemInfo, Problem problem, Contest contest) {
+    public static ContestProblem toEntity(SaveContestProblemDto registerProblemDto, Problem problem, Contest contest) {
         return ContestProblem.builder()
-                .title(problemInfo.getTitle())
-                .sequence(problemInfo.getSequence())
+                .title(problem.getTitle())
+                .sequence(registerProblemDto.getSequence())
                 .problem(problem)
                 .contest(contest)
                 .build();
+    }
+
+    public ContestProblem update(String title, Long sequence, Problem problem) {
+        this.title = title;
+        this.sequence = sequence;
+        this.problem = problem;
+        return this;
     }
 }

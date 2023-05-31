@@ -20,7 +20,7 @@ public class GetSubmissionDto {
     private String username;
     private Long contestProblemId;
     private String title;
-    private String status;
+    private Long status;
     private Long score;
     private Long memoryUsage;
     private Long timeUsage;
@@ -46,6 +46,7 @@ public class GetSubmissionDto {
                 .language("python")
                 .timeUsage(submission.getTimeUsage())
                 .length(submission.getLength())
+                .status(submission.getStatus())
                 .submitTime(submission.getSubmitTime());
 
         if (isHidden) {

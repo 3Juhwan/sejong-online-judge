@@ -26,6 +26,13 @@ public class ContestProblemController {
         return ResponseEntity.ok(contestProblemService.saveContestProblem(contestProblemToContestDto));
     }
 
+    @PutMapping("/{contestProblemId}")
+    @PreAuthorize(studentExclusiveAuth)
+    public ResponseEntity<Objects> updateContestProblem(@Valid @RequestBody SaveContestProblemDto requestDto, @PathVariable("contestProblemId") Long contestProblemId) {
+        contestProblemService.updateContestProblem(requestDto, contestProblemId);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/{contestProblemId}")
     @PreAuthorize(studentExclusiveAuth)
     public ResponseEntity<Objects> deleteContestProblem(@PathVariable("contestProblemId") Long contestProblemId) {

@@ -6,39 +6,22 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class SaveContestProblemResponseDto {
-
     private Long contestId;
-    private List<ContestProblemInfo> problemList = new ArrayList<>();
+    private Long contestProblemId;
+    private Long sequence;
+    private String title;
 
-    public SaveContestProblemResponseDto(Long contestId) {
-        this.contestId = contestId;
+    public static SaveContestProblemResponseDto from(ContestProblem contestProblem) {
+        return SaveContestProblemResponseDto.builder()
+                .contestId(contestProblem.getContest().getId())
+                .contestProblemId(contestProblem.getId())
+                .sequence(contestProblem.getSequence())
+                .title(contestProblem.getTitle())
+                .build();
     }
-
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ContestProblemInfo {
-        Long contestProblemId;
-        Long sequence;
-        String title;
-
-        public ContestProblemInfo(ContestProblem contestProblem) {
-            this.contestProblemId = contestProblem.getId();
-            this.sequence = contestProblem.getSequence();
-            this.title = contestProblem.getTitle();
-        }
-    }
-
-    public void addProblemInfo(ContestProblem contestProblem) {
-        this.problemList.add(new ContestProblemInfo(contestProblem));
-    }
-
 }
