@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface SubmissionRepository extends JpaRepository<Submission, Long> {
@@ -21,7 +22,7 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
             "AND s.contestProblem = :contestProblem " +
             "AND s.submitTime <= :endingTime " +
             "And s.score = (SELECT max(ss.score) FROM Submission ss WHERE ss.user = :user AND ss.contestProblem = :contestProblem AND ss.submitTime <= :endingTime) " +
-            "order by s.submitTime desc"+
+            "order by s.submitTime desc "+
             "")
-    Optional<Submission> findBestSubmissionOnTime(@Param("user") User user, @Param("contestProblem") ContestProblem contestProblem, @Param("endingTime") LocalDateTime endingTime);
+    Optional<List<Submission>> findBestSubmissionOnTime(@Param("user") User user, @Param("contestProblem") ContestProblem contestProblem, @Param("endingTime") LocalDateTime endingTime);
 }

@@ -160,11 +160,12 @@ public class SubmissionService {
                 .map(user -> {
                             GetTotalSubmissionDto submissionDto = GetTotalSubmissionDto.builder().username(user.getUsername()).submissionList(new ArrayList<>()).build();
                             contestProblemList
-                                    .forEach(contestProblem -> submissionDto.addItem(submissionRepository.findBestSubmissionOnTime(user, contestProblem, endingTime).orElse(null)));
+                                    .forEach(contestProblem -> submissionDto.addItem(getBestSubmissionOnTime(user, contestProblem, endingTime)));
                             return submissionDto;
                         }
                 ).toList();
     }
+
 
     // 빈 페이지를 반환하는 예제 메서드
     public Page<GetSubmissionDto> getEmptyPage() {
@@ -176,7 +177,7 @@ public class SubmissionService {
     public List<GetGradedScoreBoardResponseDto> getGradedScoreBoard(Long gradeId) {
 
         Optional<Grade> gradeOptional = gradeRepository.findById(gradeId);
-        if(gradeOptional.isEmpty()) {
+        if (gradeOptional.isEmpty()) {
             System.out.println("grade가 없습니다. ");
             return null;
         }
@@ -201,7 +202,7 @@ public class SubmissionService {
                 .map(user -> {
                             GetGradedScoreBoardResponseDto submissionDto = GetGradedScoreBoardResponseDto.builder().username(user.getUsername()).submissionList(new ArrayList<>()).build();
                             contestProblemList
-                                    .forEach(contestProblem -> submissionDto.addItem(submissionRepository.findBestSubmissionOnTime(user, contestProblem, grade.getReferenceTime()).orElse(null)));
+                                    .forEach(contestProblem -> submissionDto.addItem(getBestSubmissionOnTime(user, contestProblem, grade.getReferenceTime())));
                             return submissionDto;
                         }
                 ).toList();
@@ -218,6 +219,18 @@ public class SubmissionService {
         System.out.println("requestDto.getComment() = " + requestDto.getComment());
         submission.updateGradedScore(requestDto.getGradedScore(), requestDto.getComment());
         submissionRepository.save(submission);
+    }
+
+    private Submission getBestSubmissionOnTime(User user, ContestProblem contestProblem, LocalDateTime referenceTime) {
+        Optional<List<Submission>> bestSubmissionOnTime = submissionRepository.findBestSubmissionOnTime(user, contestProblem, referenceTime);
+        if (bestSubmissionOnTime.isEmpty()) {
+            System.out.println("Submission이 없습니다.");
+            return null;
+        } else if (bestSubmissionOnTime.get().size() == 0) {
+            return null;
+        } else {
+            return bestSubmissionOnTime.get().get(0);
+        }
     }
 
 }
