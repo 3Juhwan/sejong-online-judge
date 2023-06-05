@@ -106,9 +106,17 @@ public class SubmissionService {
             return getEmptyPage();
         }
         ContestProblem contestProblem = contestProblemRepository.findById(contestProblemId).orElse(null);
-        return new PageImpl<>(submissionRepository.findAllByConditions(user, contestProblem, status, pageable).orElse(null).stream()
+
+        List<Submission> submissions = submissionRepository.findAllByConditions(user, contestProblem, status).get();
+        int totalElements = submissions.size();
+
+        int offset = pageable.getPageNumber() * pageable.getPageSize();
+        int limit = Math.min(offset + pageable.getPageSize(), totalElements);
+        List<Submission> pagedSubmissions = submissions.subList(offset, limit);
+
+        return new PageImpl<>(pagedSubmissions.stream()
                 .map(submission -> GetSubmissionDto.from(submission, principal, false))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList()), pageable, totalElements);
     }
 
     public Page<GetSubmissionDto> getSubmissionListByContest(Principal principal, Long contestId, String username, String status, Pageable pageable) {
@@ -124,15 +132,25 @@ public class SubmissionService {
         if (contestProblemList == null) {
             return getEmptyPage();
         }
-        return new PageImpl<>(
-                contestProblemList.stream()
-                        .flatMap(contestProblem ->
-                                submissionRepository.findAllByConditions(user, contestProblem, status, pageable).orElse(null).stream()
-                                        .map(submission -> GetSubmissionDto.from(submission, principal, false))
-                        )
-                        .collect(Collectors.toList())
-        );
 
+        List<Submission> allSubmissions = new ArrayList<>();
+
+        for (ContestProblem contestProblem : contestProblemList) {
+            List<Submission> submissions = submissionRepository.findAllByConditions(user, contestProblem, status).orElse(null);
+            if (submissions != null) {
+                allSubmissions.addAll(submissions);
+            }
+        }
+
+        int totalElements = allSubmissions.size();
+
+        int offset = pageable.getPageNumber() * pageable.getPageSize();
+        int limit = Math.min(offset + pageable.getPageSize(), totalElements);
+        List<Submission> pagedSubmissions = allSubmissions.subList(offset, limit);
+
+        return new PageImpl<>(pagedSubmissions.stream()
+                .map(submission -> GetSubmissionDto.from(submission, principal, false))
+                .collect(Collectors.toList()), pageable, totalElements);
     }
 
     public GetSubmissionDto getSubmissionWithSourceCode(Principal principal, Long submissionId) {
