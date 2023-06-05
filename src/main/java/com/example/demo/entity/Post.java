@@ -30,14 +30,16 @@ public class Post extends BaseTime {
 
     private String content;
 
-    private String sourceCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "submission_id")
+    private Submission submission;
 
-    public void update(String content, String sourceCode) {
-        if(content != null) {
+    public void update(String content, Submission submission) {
+        if (content != null) {
             this.content = content;
         }
-        if(sourceCode != null) {
-            this.sourceCode = sourceCode;
+        if (submission != null) {
+            this.submission = submission;
         }
     }
 

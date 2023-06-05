@@ -3,14 +3,8 @@ package com.example.demo.service;
 import com.example.demo.dto.UpdatePostRequestDto;
 import com.example.demo.dto.postBox.CreatePostRequestDto;
 import com.example.demo.dto.postBox.PostResponseDto;
-import com.example.demo.entity.ContestProblem;
-import com.example.demo.entity.Post;
-import com.example.demo.entity.PostBox;
-import com.example.demo.entity.User;
-import com.example.demo.repository.ContestProblemRepository;
-import com.example.demo.repository.PostBoxRepository;
-import com.example.demo.repository.PostRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +20,7 @@ public class PostService {
     private final PostBoxRepository postBoxRepository;
     private final ContestProblemRepository contestProblemRepository;
     private final UserRepository userRepository;
+    private final SubmissionRepository submissionRepository;
 
     public PostResponseDto savePost(CreatePostRequestDto requestDto, Principal principal) {
         Optional<User> userOptional = userRepository.findByUsername(principal.getName());
@@ -38,7 +33,12 @@ public class PostService {
             System.out.println("postbox가 없습니다. ");
         }
         PostBox postBox = postBoxOptional.get();
-        Post post = postRepository.save(CreatePostRequestDto.toEntity(requestDto, user, postBox));
+        Optional<Submission> submissionOptional = submissionRepository.findById(requestDto.getSubmissionId());
+        if (submissionOptional.isEmpty()) {
+            System.out.println("submission이 없습니다. ");
+        }
+        Submission submission = submissionOptional.get();
+        Post post = postRepository.save(CreatePostRequestDto.toEntity(requestDto, user, postBox, submission));
         postBox.update(post);
         postBoxRepository.save(postBox);
         return PostResponseDto.from(post);
@@ -55,7 +55,12 @@ public class PostService {
             System.out.println("post가 없습니다. ");
         }
         Post post = postOptional.get();
-        post.update(requestDto.getContent(), requestDto.getSourceCode());
+        Optional<Submission> submissionOptional = submissionRepository.findById(requestDto.getSubmissionId());
+        if (submissionOptional.isEmpty()) {
+            System.out.println("submission이 없습니다. ");
+        }
+        Submission submission = submissionOptional.get();
+        post.update(requestDto.getContent(), submission);
         return PostResponseDto.from(postRepository.save(post));
     }
 
@@ -83,12 +88,12 @@ public class PostService {
         }
         User user = userOptional.get();
         Optional<ContestProblem> contestProblemOptional = contestProblemRepository.findById(contestProblemId);
-        if(contestProblemOptional.isEmpty()){
+        if (contestProblemOptional.isEmpty()) {
             System.out.println("contestProblem가 없습니다. ");
         }
         ContestProblem contestProblem = contestProblemOptional.get();
         Optional<PostBox> postBoxOptional = postBoxRepository.findByContestProblemAndUser(contestProblem, user);
-        if(postBoxOptional.isEmpty()) {
+        if (postBoxOptional.isEmpty()) {
             System.out.println("postBox가 없습니다. ");
         }
         PostBox postBox = postBoxOptional.get();

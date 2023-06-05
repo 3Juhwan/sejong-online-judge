@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Entity
@@ -41,6 +42,9 @@ public class Submission {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "problem_id")
     private Problem problem;
+
+    @OneToMany(mappedBy = "submission")
+    private List<Post> postList;
 
 
     @NotNull

@@ -12,14 +12,14 @@ public class PostResponseDto {
 
     private Long postId;
     private String content;
-    private String sourceCode;
+    private Long submissionId;
     private String username;
 
     public static PostResponseDto from(Post post) {
         return PostResponseDto.builder()
                 .postId(post.getId())
                 .content(post.getContent())
-                .sourceCode(post.getSourceCode())
+                .submissionId(post.getSubmission().getId())
                 .username(post.getAuthor().getUsername())
                 .build();
     }
