@@ -26,22 +26,29 @@ public class PostService {
         Optional<User> userOptional = userRepository.findByUsername(principal.getName());
         if (userOptional.isEmpty()) {
             System.out.println("user가 없습니다. ");
+            return null;
         }
         User user = userOptional.get();
         Optional<PostBox> postBoxOptional = postBoxRepository.findById(requestDto.getPostBoxId());
         if (postBoxOptional.isEmpty()) {
             System.out.println("postbox가 없습니다. ");
+            return null;
         }
         PostBox postBox = postBoxOptional.get();
         Optional<Submission> submissionOptional = submissionRepository.findById(requestDto.getSubmissionId());
         if (submissionOptional.isEmpty()) {
             System.out.println("submission이 없습니다. ");
+            Post post = postRepository.save(CreatePostRequestDto.toEntity(requestDto, user, postBox, null));
+            postBox.update(post);
+            postBoxRepository.save(postBox);
+            return PostResponseDto.from(post);
+        } else {
+            Submission submission = submissionOptional.get();
+            Post post = postRepository.save(CreatePostRequestDto.toEntity(requestDto, user, postBox, submission));
+            postBox.update(post);
+            postBoxRepository.save(postBox);
+            return PostResponseDto.from(post);
         }
-        Submission submission = submissionOptional.get();
-        Post post = postRepository.save(CreatePostRequestDto.toEntity(requestDto, user, postBox, submission));
-        postBox.update(post);
-        postBoxRepository.save(postBox);
-        return PostResponseDto.from(post);
     }
 
     public PostResponseDto updatePost(UpdatePostRequestDto requestDto, Principal principal) {

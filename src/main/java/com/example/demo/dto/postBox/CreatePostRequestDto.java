@@ -18,11 +18,14 @@ public class CreatePostRequestDto {
     private Long submissionId;
 
     public static Post toEntity(CreatePostRequestDto requestDto, User user, PostBox postBox, Submission submission) {
-        return Post.builder()
+        Post.PostBuilder postBuilder = Post.builder()
                 .author(user)
                 .postBox(postBox)
-                .content(requestDto.content)
-                .submission(submission)
-                .build();
+                .content(requestDto.content);
+        if(submission!=null) {
+            return postBuilder.submission(submission).build();
+        } else {
+            return postBuilder.build();
+        }
     }
 }

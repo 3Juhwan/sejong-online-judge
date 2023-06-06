@@ -16,10 +16,14 @@ public class PostResponseDto {
     private String username;
 
     public static PostResponseDto from(Post post) {
+        Long submissionId = null;
+        if (post.getSubmission() != null) {
+            submissionId = post.getSubmission().getId();
+        }
         return PostResponseDto.builder()
                 .postId(post.getId())
                 .content(post.getContent())
-                .submissionId(post.getSubmission().getId())
+                .submissionId(submissionId)
                 .username(post.getAuthor().getUsername())
                 .build();
     }
