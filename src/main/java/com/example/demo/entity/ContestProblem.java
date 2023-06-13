@@ -42,7 +42,7 @@ public class ContestProblem extends BaseTime {
 
     public static ContestProblem toEntity(SaveContestProblemDto registerProblemDto, Problem problem, Contest contest) {
         return ContestProblem.builder()
-                .title(problem.getTitle())
+                .title(registerProblemDto.getTitle())
                 .sequence(registerProblemDto.getSequence())
                 .problem(problem)
                 .contest(contest)
