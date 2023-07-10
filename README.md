@@ -5,7 +5,7 @@
 <img width="1278" alt="main-page" src="https://github.com/3Juhwan/sejong-online-judge/assets/64410384/2754f0b8-43c6-44c4-a66b-d2bfff142e8a">
 
 
-### 요구사항 분석
+## 요구사항 분석
 
 - 사용자 (user)
   - 사용자는 권한에 따라 관리자/교수/조교/학생으로 구분된다.
@@ -105,13 +105,13 @@
       - 필요 권한: 모든 사용자 
       - 필요 정보: source-code, problem id
 
-### DB Diagram
+## DB Diagram
 
 아래는 프로젝트의 간단한 DB 다이어그램 입니다. 
 
 ![db-diagram](https://github.com/3Juhwan/sejong-online-judge/assets/64410384/9811e1a6-7be7-4854-a7c9-8b617caa784a)
 
-### 프로젝트 결과
+## 프로젝트 결과
 
 ![demo1](https://github.com/3Juhwan/sejong-online-judge/assets/64410384/c6249731-0884-474d-b7e7-349df0e6c9d0)
 
