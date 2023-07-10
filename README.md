@@ -5,6 +5,9 @@
 <img width="1278" alt="main-page" src="https://github.com/3Juhwan/sejong-online-judge/assets/64410384/2754f0b8-43c6-44c4-a66b-d2bfff142e8a">
 
 
+<br>
+<br>
+
 ## 요구사항 분석
 
 - 사용자 (user)
@@ -105,11 +108,20 @@
       - 필요 권한: 모든 사용자 
       - 필요 정보: source-code, problem id
 
+
+<br>
+<br>
+
+
 ## DB Diagram
 
 아래는 프로젝트의 간단한 DB 다이어그램 입니다. 
 
 ![db-diagram](https://github.com/3Juhwan/sejong-online-judge/assets/64410384/9811e1a6-7be7-4854-a7c9-8b617caa784a)
+
+<br>
+<br>
+
 
 ## 프로젝트 결과
 
